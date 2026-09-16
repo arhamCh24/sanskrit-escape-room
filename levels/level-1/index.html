@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Level 1 - The Study Room</title>
+  <link rel="stylesheet" href="css/level.css" />
+</head>
+<body>
+  <main class="level-shell">
+    <a class="back-link" href="../../index.html">← Main Menu</a>
+
+    <section class="level-panel">
+      <div class="level-header">
+        <div>
+          <p class="eyebrow">Level 1</p>
+          <h1>The Study Room</h1>
+        </div>
+        <div class="hud">
+          <span>⏱ 02:00</span>
+          <span id="playerName">Guest</span>
+        </div>
+      </div>
+
+      <div class="placeholder-room" aria-label="Level 1 room placeholder">
+        <div class="room-object book">📘</div>
+        <div class="room-object plant">🪴</div>
+        <div class="room-object chest">🧰</div>
+        <div class="room-object door">🚪</div>
+        <div class="room-object key">🔑</div>
+      </div>
+
+      <div class="prototype-card">
+        <h2>Level 1 gameplay comes next</h2>
+        <p>This folder is already separated from the main menu, so we can build each future level independently while reusing the shared MVC models.</p>
+        <button id="completeDemoButton" type="button">Complete Demo Level</button>
+        <p id="demoMessage" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../js/models/UserModel.js"></script>
+  <script src="../../js/models/ProgressModel.js"></script>
+  <script src="js/level.js"></script>
+</body>
+</html>

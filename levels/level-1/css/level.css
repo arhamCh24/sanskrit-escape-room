@@ -1,0 +1,22 @@
+:root { --text:#15213a; --muted:#657088; --primary:#3158d4; --border:#dfe5ef; }
+* { box-sizing:border-box; }
+body { margin:0; min-height:100vh; font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--text); background:#f4f6fa; }
+button { font:inherit; }
+.level-shell { width:min(1050px,calc(100% - 30px)); margin:0 auto; padding:28px 0 60px; }
+.back-link { color:#40506f; text-decoration:none; font-weight:700; }
+.level-panel { margin-top:22px; padding:24px; border:1px solid var(--border); border-radius:24px; background:#fff; box-shadow:0 18px 45px rgba(30,45,78,.10); }
+.level-header { display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:20px; }
+.eyebrow { margin:0 0 6px;color:var(--primary);font-size:.78rem;font-weight:850;text-transform:uppercase;letter-spacing:.12em; }
+h1,h2 { margin:0; }
+h1 { font-size:clamp(2rem,5vw,3.6rem); }
+.hud { display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end; }
+.hud span { padding:9px 12px;border:1px solid var(--border);border-radius:999px;background:#f6f7fa;font-weight:800; }
+.placeholder-room { min-height:390px; position:relative; overflow:hidden; border:1px solid #d3b88b;border-radius:20px;background:linear-gradient(#dbeeff 0 67%,#ad7b49 67% 100%); }
+.placeholder-room::after { content:"";position:absolute;left:0;right:0;bottom:32%;height:5px;background:#94633e; }
+.room-object { position:absolute;filter:drop-shadow(0 5px 4px rgba(0,0,0,.10)); }
+.book { left:16%;bottom:18%;font-size:52px; }.plant { left:50%;bottom:12%;font-size:72px; }.chest { right:22%;bottom:8%;font-size:70px; }.door { right:3%;bottom:3%;font-size:150px; }.key { left:34%;bottom:23%;font-size:42px;transform:rotate(-16deg); }
+.prototype-card { margin-top:20px;padding:20px;border-radius:18px;background:#f7f8fb;border:1px solid var(--border); }
+.prototype-card p { color:var(--muted);line-height:1.6; }
+.prototype-card button { min-height:46px;padding:10px 16px;border:0;border-radius:12px;color:#fff;background:var(--primary);font-weight:800;cursor:pointer; }
+#demoMessage { font-weight:750;color:#18805c; }
+@media(max-width:640px){.level-header{align-items:flex-start;flex-direction:column}.hud{justify-content:flex-start}.placeholder-room{min-height:300px}.door{font-size:110px}.plant{font-size:55px}.chest{font-size:55px}}
