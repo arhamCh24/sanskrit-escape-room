@@ -1,14 +1,11 @@
-(function () {
-  const App = window.GameApp;
-  const userModel = new App.UserModel(window.localStorage);
-  const progressModel = new App.ProgressModel(window.localStorage);
-  const user = userModel.getCurrentUser();
+import Level1Model from "./Level1Model.js";
 
-  document.getElementById('playerName').textContent = user ? user.displayName : 'Guest';
+import Level1View from "./Level1View.js";
 
-  document.getElementById('completeDemoButton').addEventListener('click', () => {
-    const progress = progressModel.completeLevel(user, 1, 100, 3);
-    const saveText = user ? 'Progress saved.' : 'Guest progress is only kept for this page session.';
-    document.getElementById('demoMessage').textContent = `Demo complete: +100 points, +3 stars. Level ${progress.unlockedLevel} unlocked. ${saveText}`;
-  });
-})();
+import Level1Controller from "./Level1Controller.js";
+
+const model = new Level1Model();
+
+const view = new Level1View();
+
+new Level1Controller(model, view);

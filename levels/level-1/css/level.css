@@ -1,22 +1,459 @@
-:root { --text:#15213a; --muted:#657088; --primary:#3158d4; --border:#dfe5ef; }
-* { box-sizing:border-box; }
-body { margin:0; min-height:100vh; font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--text); background:#f4f6fa; }
-button { font:inherit; }
-.level-shell { width:min(1050px,calc(100% - 30px)); margin:0 auto; padding:28px 0 60px; }
-.back-link { color:#40506f; text-decoration:none; font-weight:700; }
-.level-panel { margin-top:22px; padding:24px; border:1px solid var(--border); border-radius:24px; background:#fff; box-shadow:0 18px 45px rgba(30,45,78,.10); }
-.level-header { display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:20px; }
-.eyebrow { margin:0 0 6px;color:var(--primary);font-size:.78rem;font-weight:850;text-transform:uppercase;letter-spacing:.12em; }
-h1,h2 { margin:0; }
-h1 { font-size:clamp(2rem,5vw,3.6rem); }
-.hud { display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end; }
-.hud span { padding:9px 12px;border:1px solid var(--border);border-radius:999px;background:#f6f7fa;font-weight:800; }
-.placeholder-room { min-height:390px; position:relative; overflow:hidden; border:1px solid #d3b88b;border-radius:20px;background:linear-gradient(#dbeeff 0 67%,#ad7b49 67% 100%); }
-.placeholder-room::after { content:"";position:absolute;left:0;right:0;bottom:32%;height:5px;background:#94633e; }
-.room-object { position:absolute;filter:drop-shadow(0 5px 4px rgba(0,0,0,.10)); }
-.book { left:16%;bottom:18%;font-size:52px; }.plant { left:50%;bottom:12%;font-size:72px; }.chest { right:22%;bottom:8%;font-size:70px; }.door { right:3%;bottom:3%;font-size:150px; }.key { left:34%;bottom:23%;font-size:42px;transform:rotate(-16deg); }
-.prototype-card { margin-top:20px;padding:20px;border-radius:18px;background:#f7f8fb;border:1px solid var(--border); }
-.prototype-card p { color:var(--muted);line-height:1.6; }
-.prototype-card button { min-height:46px;padding:10px 16px;border:0;border-radius:12px;color:#fff;background:var(--primary);font-weight:800;cursor:pointer; }
-#demoMessage { font-weight:750;color:#18805c; }
-@media(max-width:640px){.level-header{align-items:flex-start;flex-direction:column}.hud{justify-content:flex-start}.placeholder-room{min-height:300px}.door{font-size:110px}.plant{font-size:55px}.chest{font-size:55px}}
+/* ==============================
+   BASIC RESET
+================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+
+  background: #eef4f7;
+
+  color: #243447;
+}
+
+/* ==============================
+   MAIN GAME
+================================ */
+
+.game {
+  width: min(1500px, 100%);
+  margin: 0 auto;
+
+  padding: 18px;
+}
+
+/* ==============================
+   HEADER
+================================ */
+
+.game-header {
+  text-align: center;
+
+  margin-bottom: 16px;
+}
+
+.level-label {
+  margin: 0;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  color: #71838d;
+}
+
+.game-header h1 {
+  margin: 5px 0 7px;
+
+  font-size: clamp(26px, 4vw, 40px);
+}
+
+.intro {
+  max-width: 680px;
+
+  margin: auto;
+
+  font-size: 16px;
+
+  line-height: 1.5;
+
+  color: #53636c;
+}
+
+/* ==============================
+   CLUE CARD
+================================ */
+
+.clue-box {
+  max-width: 760px;
+
+  margin: 0 auto 17px;
+
+  padding: 16px 20px;
+
+  text-align: center;
+
+  background: white;
+
+  border-radius: 17px;
+
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.clue-label {
+  margin: 0;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+
+  color: #7a8991;
+}
+
+#sanskritWord {
+  margin: 7px 0 5px;
+
+  font-size: clamp(27px, 4vw, 37px);
+}
+
+#englishClue {
+  margin: 4px 0;
+
+  font-size: 17px;
+
+  line-height: 1.4;
+}
+
+#feedback {
+  min-height: 23px;
+
+  margin: 8px 0 0;
+
+  font-weight: 700;
+}
+
+/* ==============================
+   ROOM
+================================ */
+
+.room-scroll {
+  width: 100%;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  border-radius: 18px;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.room-container {
+  position: relative;
+
+  width: 100%;
+
+  margin: auto;
+
+  overflow: hidden;
+
+  border-radius: 18px;
+
+  background: #ddd;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+}
+
+#roomMap {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  user-select: none;
+
+  -webkit-user-select: none;
+
+  touch-action: manipulation;
+}
+
+/* ==============================
+   INVISIBLE HOTSPOTS
+================================ */
+
+.hotspot {
+  /*
+    Hotspots stay invisible.
+
+    They use the actual object
+    already drawn in the room image.
+  */
+
+  fill: transparent;
+
+  stroke: transparent;
+
+  stroke-width: 3px;
+
+  /*
+    IMPORTANT:
+
+    Keep normal cursor instead of
+    pointer cursor.
+
+    Otherwise a child could move
+    the mouse around until the cursor
+    reveals the clickable objects.
+  */
+
+  cursor: default;
+
+  pointer-events: all;
+}
+
+/* Correct object briefly flashes */
+
+.hotspot.correct {
+  fill: rgba(60, 190, 95, 0.18);
+
+  stroke: rgba(45, 170, 80, 0.95);
+
+  stroke-width: 7px;
+}
+
+/* Wrong object briefly flashes */
+
+.hotspot.wrong {
+  fill: rgba(220, 70, 70, 0.08);
+}
+
+/* ==============================
+   DEVELOPMENT HOTSPOTS
+
+   Change DEBUG_HOTSPOTS to true
+   in Level1Controller.js if you
+   need to see the hotspot areas.
+================================ */
+
+body.debug-hotspots .hotspot {
+  fill: rgba(255, 0, 0, 0.18);
+
+  stroke: red;
+
+  stroke-width: 3px;
+}
+
+/* ==============================
+   PROGRESS
+================================ */
+
+.progress {
+  display: flex;
+
+  justify-content: center;
+
+  flex-wrap: wrap;
+
+  gap: 9px;
+
+  margin-top: 18px;
+}
+
+.step {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 9px 14px;
+
+  border-radius: 100px;
+
+  background: white;
+
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.06);
+
+  transition:
+    opacity 0.25s,
+    transform 0.25s,
+    filter 0.25s;
+}
+
+.step span {
+  width: 27px;
+  height: 27px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: #dde5e9;
+
+  font-size: 13px;
+
+  font-weight: bold;
+}
+
+/* Current step */
+
+.step.active {
+  opacity: 1;
+
+  transform: scale(1.05);
+}
+
+.step.active span {
+  background: #ffd166;
+}
+
+/* Future step */
+
+.step.locked {
+  opacity: 0.32;
+
+  filter: grayscale(1);
+}
+
+/* Found step */
+
+.step.complete {
+  opacity: 0.7;
+}
+
+.step.complete span {
+  background: #8bd69b;
+}
+
+/* ==============================
+   STORY POPUP
+================================ */
+
+.popup {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: grid;
+
+  place-items: center;
+
+  padding: 20px;
+
+  background: rgba(16, 27, 35, 0.68);
+}
+
+.popup.hidden {
+  display: none;
+}
+
+.popup-card {
+  width: min(450px, 100%);
+
+  padding: 27px;
+
+  border-radius: 20px;
+
+  text-align: center;
+
+  background: white;
+
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.3);
+}
+
+.popup-icon {
+  font-size: 38px;
+}
+
+.popup-card h2 {
+  margin: 9px 0;
+}
+
+.popup-card p {
+  line-height: 1.55;
+
+  color: #4b5b64;
+}
+
+.popup-card button {
+  margin-top: 8px;
+
+  padding: 11px 25px;
+
+  border: none;
+
+  border-radius: 11px;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  background: #ffd166;
+
+  color: #28343a;
+
+  cursor: pointer;
+}
+
+/* ==============================
+   TABLET
+================================ */
+
+@media (max-width: 900px) {
+  .game {
+    padding: 12px;
+  }
+
+  .step {
+    padding: 8px 12px;
+  }
+}
+
+/* ==============================
+   MOBILE
+
+   Do NOT shrink the huge room
+   too much.
+
+   Keep it larger and allow
+   horizontal exploration.
+================================ */
+
+@media (max-width: 650px) {
+  .game {
+    padding: 9px;
+  }
+
+  .game-header {
+    margin-bottom: 11px;
+  }
+
+  .intro {
+    font-size: 14px;
+  }
+
+  .clue-box {
+    padding: 13px 12px;
+
+    margin-bottom: 10px;
+  }
+
+  #englishClue {
+    font-size: 15px;
+  }
+
+  .room-container {
+    width: 850px;
+
+    max-width: none;
+  }
+
+  .room-scroll {
+    border-radius: 12px;
+  }
+
+  .step {
+    padding: 7px 9px;
+
+    font-size: 12px;
+  }
+
+  .step span {
+    width: 23px;
+    height: 23px;
+  }
+}
