@@ -1,75 +1,120 @@
-# Sanskrit Escape Room - Starter Prototype
+# Sanskrit Escape Room — Shared Level Engine
 
-A simple browser-based starter for the Sanskrit Escape Room concept using only HTML, CSS, and client-side JavaScript.
+This is the refactored project structure so future levels can reuse the same layout and game logic.
 
-## What is included
+## Shared files
 
-- Kid-friendly main screen
-- Start Game / level selection
-- Login and register prototype
-- Login session remembered with localStorage
-- Per-user progress stored with localStorage
-- Settings stored with localStorage
-- How to Play modal
-- MVC-inspired folder structure
-- Separate folder for each level
-- Level 1 placeholder with a demo progress-save button
-- Level 2 and Level 3 folders ready for future work
+Every level uses the same:
 
-## Run it
+- `game/game.html`
+- `game/css/game.css`
+- `game/js/models/GameModel.js`
+- `game/js/views/GameView.js`
+- `game/js/controllers/GameController.js`
+- `game/js/LevelLoader.js`
+- `game/js/game.js`
 
-For reliable Web Crypto + localStorage behavior, run the project through localhost instead of opening the HTML file directly.
+Each level only needs its own configuration file under `levels/level-N/level.js`.
 
-### Option 1 - VS Code
-Install the **Live Server** extension and open `index.html` with Live Server.
+## Assets
 
-### Option 2 - Node.js
-From this folder, run:
+Media is kept separately under `assets/`:
 
-```bash
-npx serve .
+- `assets/images/levels/level-1/background.png`
+- `assets/images/levels/level-2/`
+- `assets/audio/levels/level-1/`
+- `assets/audio/levels/level-2/`
+- `assets/icons/`
+
+The included Level 1 config already points to:
+
+`assets/images/levels/level-1/background.png`
+
+## Test Level 1
+
+Run the project through Live Server or another HTTP server, then open:
+
+`game/game.html?level=1`
+
+The included root `index.html` is only a simple test launcher. If your existing project already has a homepage/login/level-selection page, keep it and change the Level 1 link to:
+
+`game/game.html?level=1`
+
+## Old Level 1 files
+
+After this version works, you can remove the old duplicated files:
+
+- `levels/level-1/index.html`
+- `levels/level-1/css/level.css`
+- old `levels/level-1/js/Level1Model.js`
+- old `levels/level-1/js/Level1View.js`
+- old `levels/level-1/js/Level1Controller.js`
+
+Keep the new `levels/level-1/level.js` from this package.
+
+## Future difficulty
+
+Each level can define settings such as:
+
+```js
+settings: {
+  timer: false,
+  questions: false,
+  audio: false,
+  scoring: false,
+  randomizeObjects: false
+}
 ```
 
-Then open the localhost URL printed in the terminal.
+Starter reusable managers are included in `game/js/features/` for future work:
 
-## MVC mapping
+- `TimerManager.js`
+- `AudioManager.js`
+- `QuestionManager.js`
+- `ScoreManager.js`
+- `InventoryManager.js`
+- `Randomizer.js`
 
-### Model
-`js/models/`
+They are intentionally not connected to Level 1 yet, so Level 1 stays simple.
 
-- `UserModel.js` - registration, login session, local prototype accounts
-- `ProgressModel.js` - score, stars, unlocked levels
-- `SettingsModel.js` - sound and motion preferences
+## Level 2 and later
 
-### View
-`js/views/`
+Create/update only:
 
-- `AuthView.js` - login/register modal UI
-- `MainMenuView.js` - home and level-selection UI
-- `SettingsView.js` - settings UI
+- `levels/level-2/level.js`
+- `assets/images/levels/level-2/background.png`
+- optional audio files under `assets/audio/levels/level-2/`
 
-### Controller
-`js/controllers/`
+Then launch it with:
 
-- `AuthController.js` - connects account forms to UserModel
-- `MainMenuController.js` - Start Game, level selection, How to Play
-- `SettingsController.js` - connects settings UI to SettingsModel
+`game/game.html?level=2`
 
-## Level folders
+## Important
 
-Each level gets its own folder:
+Use Live Server / GitHub Pages / another HTTP server. Do not open `game.html` with a `file://` URL because ES modules and dynamic imports are used.
 
-```text
-levels/
-  level-1/
-  level-2/
-  level-3/
-```
 
-Level-specific assets and logic can stay inside the level folder. Shared systems should remain outside the level folders to avoid copying the same code into every level.
+## Portal-ready game home
 
-## Important security note
+The root `index.html` is now the Sanskrit Escape Room's own game home screen, not a copy of the zat.am portal.
 
-The login feature in this starter is only for a local prototype. The browser hashes the password before storing the prototype account, but client-side localStorage is not a secure replacement for real authentication.
+Flow:
 
-For a production/shared website, use a secure backend or an authentication service such as Firebase Authentication, Supabase Auth, Auth0, etc.
+`zat.am portal -> Sanskrit Escape Room home -> level -> Escape Room home / portal home`
+
+Portal values used:
+
+- `zatamUserId` — internal progress ownership / future leaderboard integration
+- `zatamUserName` — displayed in the game header
+- `zatamUserPhoto` — displayed if available
+- `zatamLanguage` — available for future localization
+
+Escape Room progress is stored per user in:
+
+`sanskritEscapeRoomProgress:v1:<zatamUserId>`
+
+Settings are stored per user in:
+
+`sanskritEscapeRoomSettings:v1:<zatamUserId>`
+
+Localhost cannot read `localStorage` from `https://zatam2.vercel.app` because localStorage is origin-scoped. Once integrated under the same zat.am origin, the portal account values are available to the game.

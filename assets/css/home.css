@@ -1,0 +1,1914 @@
+/* =========================================================
+   SANSKRIT ESCAPE ROOM
+   HOME PAGE
+
+   Uses the zat.am palette but keeps a unique
+   Escape Room game identity.
+========================================================= */
+
+/* =========================================================
+   DESIGN TOKENS
+========================================================= */
+
+:root {
+  --ink: #1e293b;
+
+  --navy: #0f3158;
+
+  --border: #e2e8f0;
+
+  --white: #ffffff;
+
+  --muted: #64748b;
+
+  --amber-dark: #b45309;
+
+  --amber: #d97706;
+
+  --amber-light: #f6b43b;
+
+  --amber-soft: #fff1d6;
+
+  --teal-dark: #115e59;
+
+  --teal: #2dd4bf;
+
+  --teal-soft: #e4f8f3;
+
+  --cream: #efe9dc;
+
+  --cream-light: #fff9ef;
+
+  --cream-card: #fffdf8;
+
+  --shadow-small: 0 5px 16px rgba(30, 41, 59, 0.06);
+
+  --shadow-medium: 0 14px 34px rgba(30, 41, 59, 0.11);
+
+  --shadow-large: 0 28px 70px rgba(30, 41, 59, 0.18);
+
+  --radius-small: 9px;
+
+  --radius-medium: 13px;
+
+  --radius-large: 20px;
+
+  --radius-xl: 24px;
+
+  --content-width: 1450px;
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+
+  min-width: 320px;
+
+  color: var(--ink);
+
+  background: var(--cream-light);
+
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.home-main {
+  min-height: calc(100dvh - 60px);
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero-shell {
+  position: relative;
+
+  min-height: clamp(580px, calc(100dvh - 60px), 800px);
+
+  padding: clamp(46px, 5vw, 78px)
+    max(24px, calc((100vw - var(--content-width)) / 2));
+
+  overflow: hidden;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(430px, 0.88fr)
+    minmax(590px, 1.12fr);
+
+  align-items: center;
+
+  gap: clamp(48px, 6vw, 100px);
+
+  background:
+    radial-gradient(
+      circle at 91% 11%,
+      rgba(217, 119, 6, 0.15),
+      transparent 17%
+    ),
+    radial-gradient(
+      circle at 50% 105%,
+      rgba(45, 212, 191, 0.1),
+      transparent 24%
+    ),
+    linear-gradient(118deg, #fff9ee 0%, #fff9f3 51%, #fff0cd 100%);
+}
+
+/* Decorative bottom-right shape */
+
+.hero-shell::after {
+  content: "";
+
+  position: absolute;
+
+  right: -125px;
+
+  bottom: -210px;
+
+  width: 470px;
+
+  height: 470px;
+
+  border-radius: 45% 55% 42% 58%;
+
+  background: rgba(217, 119, 6, 0.065);
+
+  transform: rotate(20deg);
+
+  pointer-events: none;
+}
+
+/* Decorative middle glow */
+
+.hero-shell::before {
+  content: "";
+
+  position: absolute;
+
+  left: 43%;
+
+  top: 11%;
+
+  width: 155px;
+
+  height: 155px;
+
+  border-radius: 50%;
+
+  background: rgba(45, 212, 191, 0.045);
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   HERO COPY
+========================================================= */
+
+.hero-copy {
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 680px;
+}
+
+.hero-kicker,
+.section-kicker {
+  display: inline-block;
+
+  color: var(--amber-dark);
+
+  font-size: clamp(9px, 0.7vw, 11px);
+
+  font-weight: 850;
+
+  letter-spacing: 1.9px;
+}
+
+.hero-copy h1 {
+  max-width: 680px;
+
+  margin: 10px 0 19px;
+
+  color: var(--navy);
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(58px, 6vw, 94px);
+
+  line-height: 0.92;
+
+  letter-spacing: -4px;
+}
+
+.hero-copy h1 span {
+  color: var(--teal-dark);
+}
+
+.hero-lead {
+  max-width: 620px;
+
+  margin: 0;
+
+  color: #334155;
+
+  font-size: clamp(15px, 1.15vw, 18px);
+
+  line-height: 1.62;
+}
+
+/* =========================================================
+   HERO ACTIONS
+========================================================= */
+
+.hero-actions {
+  margin-top: 28px;
+
+  display: flex;
+
+  align-items: stretch;
+
+  gap: 12px;
+
+  flex-wrap: wrap;
+}
+
+.primary-action {
+  min-width: 245px;
+
+  min-height: 60px;
+
+  padding: 8px 18px 8px 9px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  border-radius: 11px;
+
+  background: var(--navy);
+
+  color: var(--white);
+
+  text-decoration: none;
+
+  box-shadow: 0 10px 27px rgba(15, 49, 88, 0.17);
+
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.primary-action:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 16px 34px rgba(15, 49, 88, 0.22);
+}
+
+.primary-action:focus-visible {
+  outline: 3px solid rgba(45, 212, 191, 0.4);
+
+  outline-offset: 3px;
+}
+
+.action-icon {
+  width: 42px;
+
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 9px;
+
+  background: rgba(255, 255, 255, 0.13);
+
+  font-size: 13px;
+}
+
+.primary-action > span:last-child {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+}
+
+.primary-action small {
+  color: rgba(255, 255, 255, 0.72);
+
+  font-size: 7px;
+
+  font-weight: 850;
+
+  letter-spacing: 1.15px;
+}
+
+.primary-action strong {
+  margin-top: 2px;
+
+  font-size: 13px;
+
+  line-height: 1.2;
+}
+
+.secondary-action {
+  min-height: 60px;
+
+  padding: 0 21px;
+
+  border: 1px solid rgba(180, 83, 9, 0.18);
+
+  border-radius: 11px;
+
+  background: var(--white);
+
+  color: var(--ink);
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.secondary-action:hover {
+  transform: translateY(-2px);
+
+  border-color: rgba(217, 119, 6, 0.55);
+
+  box-shadow: var(--shadow-small);
+}
+
+/* =========================================================
+   QUICK STATS
+========================================================= */
+
+.quick-stats {
+  margin-top: 29px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  color: var(--muted);
+}
+
+.quick-stats > div {
+  min-width: 76px;
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+.quick-stats strong {
+  color: var(--ink);
+
+  font-size: clamp(18px, 1.5vw, 22px);
+
+  line-height: 1;
+}
+
+.quick-stats span {
+  margin-top: 5px;
+
+  color: var(--muted);
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  line-height: 1.25;
+}
+
+.quick-stats i {
+  width: 1px;
+
+  height: 34px;
+
+  flex-shrink: 0;
+
+  background: rgba(100, 116, 139, 0.22);
+}
+
+/* =========================================================
+   HERO ADVENTURE PREVIEW
+========================================================= */
+
+.hero-preview {
+  position: relative;
+
+  z-index: 2;
+
+  min-width: 0;
+}
+
+.adventure-window {
+  width: min(100%, 790px);
+
+  margin-left: auto;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(100, 116, 139, 0.18);
+
+  border-radius: 22px;
+
+  background: var(--white);
+
+  box-shadow: var(--shadow-large);
+}
+
+/* =========================================================
+   PREVIEW HEADER
+========================================================= */
+
+.adventure-toolbar {
+  min-height: 63px;
+
+  padding: 11px 16px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+.adventure-toolbar > div {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+.adventure-toolbar > div span {
+  margin-bottom: 3px;
+
+  color: var(--muted);
+
+  font-size: 8px;
+
+  font-weight: 850;
+
+  letter-spacing: 1.3px;
+}
+
+.adventure-toolbar strong {
+  overflow: hidden;
+
+  color: var(--navy);
+
+  font-size: 15px;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+.explore-pill {
+  flex-shrink: 0;
+
+  padding: 5px 9px;
+
+  border-radius: 999px;
+
+  background: rgba(45, 212, 191, 0.14);
+
+  color: var(--teal-dark);
+
+  font-size: 7px;
+
+  font-weight: 850;
+
+  letter-spacing: 0.85px;
+}
+
+/* =========================================================
+   ADVENTURE MAP IMAGE
+========================================================= */
+
+.adventure-image {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 1672 / 941;
+
+  overflow: hidden;
+
+  background: var(--border);
+}
+
+.adventure-image img {
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+/* =========================================================
+   PREVIEW FOOTER
+========================================================= */
+
+.adventure-bottom {
+  min-height: 55px;
+
+  padding: 10px 16px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 18px;
+}
+
+.adventure-path {
+  min-width: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.adventure-path span {
+  color: var(--navy);
+
+  font-size: 8px;
+
+  font-weight: 800;
+}
+
+.adventure-path i {
+  width: 17px;
+
+  height: 1px;
+
+  background: var(--amber);
+}
+
+.adventure-bottom > small {
+  flex-shrink: 0;
+
+  color: var(--muted);
+
+  font-size: 7px;
+
+  font-weight: 650;
+}
+
+/* =========================================================
+   FLOATING HERO ELEMENTS
+========================================================= */
+
+.floating-token {
+  position: absolute;
+
+  border: 2px solid var(--navy);
+
+  background: var(--white);
+
+  box-shadow: var(--shadow-medium);
+}
+
+.token-word {
+  left: -24px;
+
+  bottom: 46px;
+
+  padding: 9px 13px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  border-radius: 13px;
+
+  transform: rotate(-5deg);
+}
+
+.token-word strong {
+  color: var(--navy);
+
+  font-size: 21px;
+}
+
+.token-word small {
+  margin-top: 2px;
+
+  color: var(--muted);
+
+  font-size: 7px;
+
+  font-weight: 650;
+}
+
+.token-key {
+  right: -14px;
+
+  top: 68px;
+
+  width: 54px;
+
+  height: 54px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 15px;
+
+  background: #ffd76b;
+
+  font-size: 25px;
+
+  transform: rotate(7deg);
+}
+
+/* =========================================================
+   PROGRESS STRIP
+========================================================= */
+
+.progress-strip {
+  padding: 19px max(24px, calc((100vw - var(--content-width)) / 2));
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(390px, 0.8fr);
+
+  align-items: center;
+
+  gap: 45px;
+
+  background: var(--white);
+
+  border-top: 1px solid rgba(226, 232, 240, 0.55);
+
+  border-bottom: 1px solid var(--border);
+}
+
+.progress-strip h2 {
+  margin: 4px 0;
+
+  color: var(--navy);
+
+  font-size: 21px;
+
+  line-height: 1.2;
+}
+
+.progress-strip p {
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 11px;
+
+  line-height: 1.45;
+}
+
+.progress-block {
+  width: 100%;
+}
+
+.progress-copy {
+  margin-bottom: 7px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  color: var(--muted);
+
+  font-size: 9px;
+
+  font-weight: 750;
+}
+
+.progress-copy strong {
+  color: var(--teal-dark);
+
+  font-size: 10px;
+}
+
+.progress-track {
+  width: 100%;
+
+  height: 8px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: var(--border);
+}
+
+.progress-track > div {
+  width: 0;
+
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: linear-gradient(90deg, var(--teal-dark), var(--teal));
+
+  transition: width 420ms ease;
+}
+
+/* =========================================================
+   ESCAPE ROOMS SECTION
+========================================================= */
+
+.levels-section {
+  padding: clamp(42px, 4.5vw, 62px)
+    max(24px, calc((100vw - var(--content-width)) / 2));
+
+  background: var(--cream-card);
+}
+
+.section-heading {
+  margin-bottom: 24px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 30px;
+}
+
+.section-heading > div {
+  min-width: 0;
+}
+
+.section-heading h2 {
+  margin: 5px 0 0;
+
+  color: var(--navy);
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(31px, 3vw, 43px);
+
+  line-height: 1.05;
+
+  letter-spacing: -1px;
+}
+
+.section-heading > p {
+  max-width: 480px;
+
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 11px;
+
+  line-height: 1.55;
+}
+
+/* =========================================================
+   LEVEL GRID
+
+   Automatically handles:
+   1 level + future card
+   2 levels + future card
+   3 levels + future card
+   etc.
+
+   minmax(360px) keeps cards professionally sized and
+   prevents too many tiny columns on large displays.
+========================================================= */
+
+.level-grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+
+  gap: 20px;
+}
+
+/* =========================================================
+   REAL LEVEL CARD
+========================================================= */
+
+.level-card {
+  min-width: 0;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  background: var(--white);
+
+  box-shadow: var(--shadow-small);
+
+  transition:
+    transform 170ms ease,
+    box-shadow 170ms ease,
+    border-color 170ms ease;
+}
+
+.level-card.is-playable:hover {
+  transform: translateY(-3px);
+
+  border-color: rgba(17, 94, 89, 0.22);
+
+  box-shadow: var(--shadow-medium);
+}
+
+.level-card.is-locked {
+  opacity: 0.76;
+}
+
+/* =========================================================
+   LEVEL IMAGE
+========================================================= */
+
+.level-image {
+  position: relative;
+
+  aspect-ratio: 16 / 9;
+
+  overflow: hidden;
+
+  background: linear-gradient(145deg, #fff2d9, #edf7f4);
+}
+
+.level-image img {
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+/* =========================================================
+   LEVEL TOP STATUS
+========================================================= */
+
+.level-status-pill {
+  position: absolute;
+
+  left: 10px;
+
+  top: 10px;
+
+  padding: 5px 8px;
+
+  border-radius: 999px;
+
+  background: rgba(17, 94, 89, 0.94);
+
+  color: var(--white);
+
+  font-size: 7px;
+
+  font-weight: 850;
+
+  letter-spacing: 0.75px;
+}
+
+.level-card.is-locked .level-status-pill {
+  background: rgba(100, 116, 139, 0.94);
+}
+
+/* =========================================================
+   LEVEL BODY
+========================================================= */
+
+.level-body {
+  padding: 15px;
+}
+
+.level-meta {
+  margin-bottom: 8px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.level-meta span {
+  color: var(--amber-dark);
+
+  font-size: 8px;
+
+  font-weight: 850;
+
+  letter-spacing: 0.9px;
+}
+
+.level-meta strong {
+  padding: 4px 7px;
+
+  border-radius: 999px;
+
+  background: var(--border);
+
+  color: var(--muted);
+
+  font-size: 7px;
+
+  font-weight: 800;
+}
+
+.level-meta strong.is-complete {
+  background: var(--teal-soft);
+
+  color: var(--teal-dark);
+}
+
+.level-body h3 {
+  margin: 0 0 6px;
+
+  color: var(--navy);
+
+  font-size: 16px;
+
+  line-height: 1.25;
+}
+
+.level-body p {
+  min-height: 35px;
+
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 9px;
+
+  line-height: 1.55;
+}
+
+.level-footer {
+  margin-top: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.level-footer > span {
+  color: var(--muted);
+
+  font-size: 8px;
+
+  font-weight: 700;
+}
+
+.level-action {
+  min-height: 32px;
+
+  padding: 0 11px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 7px;
+
+  background: var(--navy);
+
+  color: var(--white);
+
+  text-decoration: none;
+
+  font-size: 8px;
+
+  font-weight: 850;
+
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease;
+}
+
+.level-action:hover {
+  transform: translateY(-1px);
+}
+
+.level-action.disabled {
+  pointer-events: none;
+
+  background: var(--border);
+
+  color: var(--muted);
+}
+
+/* =========================================================
+   FUTURE ADVENTURES CARD
+========================================================= */
+
+.future-adventure-card {
+  min-width: 0;
+
+  overflow: hidden;
+
+  border: 1px dashed rgba(17, 94, 89, 0.3);
+
+  border-radius: 18px;
+
+  background: linear-gradient(145deg, #fffcf5, #f4fbf9);
+
+  box-shadow: var(--shadow-small);
+}
+
+/* =========================================================
+   FUTURE CARD VISUAL
+========================================================= */
+
+.future-visual {
+  position: relative;
+
+  aspect-ratio: 16 / 9;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 18% 23%,
+      rgba(246, 180, 59, 0.2),
+      transparent 24%
+    ),
+    radial-gradient(
+      circle at 82% 78%,
+      rgba(45, 212, 191, 0.16),
+      transparent 26%
+    ),
+    linear-gradient(135deg, #fff5de, #edf8f5);
+}
+
+/* =========================================================
+   FUTURE MINI ADVENTURE MAP
+========================================================= */
+
+.future-map {
+  position: absolute;
+
+  inset: 0;
+
+  display: grid;
+
+  place-items: center;
+}
+
+/* Nodes */
+
+.future-node {
+  position: absolute;
+
+  width: 18px;
+
+  height: 18px;
+
+  border: 4px solid var(--white);
+
+  border-radius: 50%;
+
+  background: var(--amber);
+
+  box-shadow:
+    0 0 0 2px rgba(217, 119, 6, 0.25),
+    0 4px 10px rgba(30, 41, 59, 0.1);
+}
+
+.node-one {
+  left: 17%;
+
+  bottom: 24%;
+}
+
+.node-two {
+  left: 40%;
+
+  top: 24%;
+}
+
+.node-three {
+  right: 32%;
+
+  bottom: 27%;
+}
+
+.node-four {
+  right: 13%;
+
+  top: 20%;
+
+  background: var(--teal);
+}
+
+/* Paths */
+
+.future-path {
+  position: absolute;
+
+  height: 3px;
+
+  border-radius: 999px;
+
+  background: repeating-linear-gradient(
+    90deg,
+    var(--amber) 0 9px,
+    transparent 9px 15px
+  );
+
+  transform-origin: left center;
+}
+
+.path-one {
+  left: 20%;
+
+  bottom: 29%;
+
+  width: 26%;
+
+  transform: rotate(-29deg);
+}
+
+.path-two {
+  left: 43%;
+
+  top: 31%;
+
+  width: 28%;
+
+  transform: rotate(34deg);
+}
+
+.path-three {
+  right: 14%;
+
+  top: 29%;
+
+  width: 23%;
+
+  transform: rotate(-30deg);
+}
+
+/* Center lock */
+
+.future-lock {
+  position: relative;
+
+  z-index: 3;
+
+  width: 74px;
+
+  height: 74px;
+
+  display: grid;
+
+  place-items: center;
+
+  border: 2px solid rgba(15, 49, 88, 0.14);
+
+  border-radius: 22px;
+
+  background: rgba(255, 255, 255, 0.86);
+
+  box-shadow: var(--shadow-medium);
+
+  font-size: 31px;
+
+  transform: rotate(-3deg);
+}
+
+/* Top pill */
+
+.future-pill {
+  position: absolute;
+
+  left: 11px;
+
+  top: 11px;
+
+  padding: 5px 8px;
+
+  border-radius: 999px;
+
+  background: var(--navy);
+
+  color: var(--white);
+
+  font-size: 7px;
+
+  font-weight: 850;
+
+  letter-spacing: 0.8px;
+}
+
+/* =========================================================
+   FUTURE CARD CONTENT
+========================================================= */
+
+.future-content {
+  padding: 17px;
+}
+
+.future-eyebrow {
+  color: var(--amber-dark);
+
+  font-size: 8px;
+
+  font-weight: 850;
+
+  letter-spacing: 1px;
+}
+
+.future-content h3 {
+  margin: 6px 0;
+
+  color: var(--navy);
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 20px;
+}
+
+.future-content > p {
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 9px;
+
+  line-height: 1.55;
+}
+
+/* =========================================================
+   FUTURE FEATURES
+========================================================= */
+
+.future-features {
+  margin-top: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  flex-wrap: wrap;
+}
+
+.future-features span {
+  padding: 6px 8px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.7);
+
+  color: #475569;
+
+  font-size: 7px;
+
+  font-weight: 750;
+}
+
+/* =========================================================
+   FUTURE FOOTER
+========================================================= */
+
+.future-footer {
+  margin-top: 16px;
+
+  padding-top: 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 10px;
+
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.future-footer span {
+  color: var(--muted);
+
+  font-size: 8px;
+
+  font-weight: 700;
+}
+
+.future-footer strong {
+  padding: 6px 9px;
+
+  border-radius: 7px;
+
+  background: var(--teal-soft);
+
+  color: var(--teal-dark);
+
+  font-size: 8px;
+
+  font-weight: 850;
+}
+
+/* =========================================================
+   DIALOGS
+========================================================= */
+
+.game-dialog {
+  position: relative;
+
+  width: min(525px, calc(100% - 28px));
+
+  padding: 25px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 22px;
+
+  background: var(--white);
+
+  color: var(--ink);
+
+  box-shadow: 0 26px 70px rgba(30, 41, 59, 0.28);
+}
+
+.game-dialog::backdrop {
+  background: rgba(30, 41, 59, 0.62);
+
+  backdrop-filter: blur(5px);
+}
+
+.game-dialog h2 {
+  margin: 5px 0 18px;
+
+  color: var(--navy);
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 29px;
+
+  line-height: 1.1;
+}
+
+/* =========================================================
+   DIALOG CLOSE
+========================================================= */
+
+.dialog-close {
+  position: absolute;
+
+  right: 15px;
+
+  top: 15px;
+
+  width: 33px;
+
+  height: 33px;
+
+  display: grid;
+
+  place-items: center;
+
+  border: 1px solid var(--border);
+
+  border-radius: 50%;
+
+  background: var(--white);
+
+  color: var(--ink);
+
+  font-size: 20px;
+
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   HOW TO PLAY
+========================================================= */
+
+.instruction-list {
+  display: grid;
+
+  gap: 11px;
+}
+
+.instruction-list > div {
+  display: grid;
+
+  grid-template-columns:
+    30px
+    minmax(0, 1fr);
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+.instruction-list span {
+  width: 30px;
+
+  height: 30px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: var(--teal-soft);
+
+  color: var(--teal-dark);
+
+  font-size: 9px;
+
+  font-weight: 850;
+}
+
+.instruction-list p {
+  margin: 0;
+
+  color: #475569;
+
+  font-size: 10px;
+
+  line-height: 1.5;
+}
+
+.dialog-primary {
+  width: 100%;
+
+  min-height: 42px;
+
+  margin-top: 19px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: var(--navy);
+
+  color: var(--white);
+
+  text-decoration: none;
+
+  font-size: 10px;
+
+  font-weight: 850;
+}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.setting-row {
+  padding: 13px 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 22px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.setting-row > span {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+.setting-row strong {
+  font-size: 12px;
+}
+
+.setting-row small {
+  max-width: 390px;
+
+  margin-top: 3px;
+
+  color: var(--muted);
+
+  font-size: 9px;
+
+  line-height: 1.45;
+}
+
+.setting-row input {
+  width: 18px;
+
+  height: 18px;
+
+  flex-shrink: 0;
+
+  accent-color: var(--teal-dark);
+}
+
+/* =========================================================
+   RESET BUTTON
+========================================================= */
+
+.danger-action {
+  width: 100%;
+
+  min-height: 40px;
+
+  margin-top: 18px;
+
+  border: 1px solid rgba(180, 83, 9, 0.22);
+
+  border-radius: 9px;
+
+  background: #fff7ed;
+
+  color: var(--amber-dark);
+
+  font-size: 10px;
+
+  font-weight: 850;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   VERY LARGE DISPLAYS
+========================================================= */
+
+@media (min-width: 1800px) {
+  :root {
+    --content-width: 1580px;
+  }
+
+  .hero-shell {
+    min-height: 720px;
+  }
+
+  .adventure-window {
+    max-width: 830px;
+  }
+}
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (max-width: 1250px) {
+  .hero-shell {
+    grid-template-columns:
+      minmax(380px, 0.86fr)
+      minmax(500px, 1.14fr);
+
+    gap: 42px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(52px, 5.7vw, 73px);
+  }
+
+  .token-word {
+    left: -12px;
+  }
+
+  .token-key {
+    right: -6px;
+  }
+}
+
+/* =========================================================
+   SMALL LAPTOP / LANDSCAPE TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .hero-shell {
+    min-height: auto;
+
+    grid-template-columns:
+      1fr
+      minmax(390px, 0.95fr);
+
+    gap: 32px;
+
+    padding-top: 42px;
+
+    padding-bottom: 48px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(46px, 6vw, 62px);
+  }
+
+  .primary-action {
+    min-width: 210px;
+  }
+
+  .adventure-toolbar strong {
+    font-size: 13px;
+  }
+}
+
+/* =========================================================
+   TABLET PORTRAIT
+========================================================= */
+
+@media (max-width: 820px) {
+  .hero-shell {
+    padding: 38px 18px 48px;
+
+    grid-template-columns: 1fr;
+
+    gap: 36px;
+  }
+
+  .hero-copy {
+    max-width: 700px;
+  }
+
+  .hero-copy h1 {
+    max-width: 650px;
+  }
+
+  .hero-preview {
+    width: 100%;
+  }
+
+  .adventure-window {
+    width: min(100%, 730px);
+
+    margin: 0 auto;
+  }
+
+  .token-word {
+    left: 6px;
+  }
+
+  .token-key {
+    right: 6px;
+  }
+
+  .progress-strip {
+    padding: 19px 18px;
+
+    grid-template-columns: 1fr;
+
+    gap: 17px;
+  }
+
+  .levels-section {
+    padding: 44px 18px;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 9px;
+  }
+
+  .section-heading > p {
+    max-width: 620px;
+  }
+
+  .level-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .level-body p {
+    min-height: 0;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 560px) {
+  .hero-shell {
+    padding: 30px 13px 40px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(43px, 13vw, 58px);
+
+    letter-spacing: -2.3px;
+  }
+
+  .hero-lead {
+    font-size: 14px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .primary-action,
+  .secondary-action {
+    width: 100%;
+  }
+
+  .quick-stats {
+    gap: 9px;
+  }
+
+  .quick-stats > div {
+    min-width: 0;
+
+    flex: 1;
+  }
+
+  .quick-stats span {
+    font-size: 7px;
+  }
+
+  .floating-token {
+    display: none;
+  }
+
+  .adventure-toolbar {
+    min-height: 55px;
+
+    padding: 9px 11px;
+  }
+
+  .adventure-toolbar strong {
+    font-size: 12px;
+  }
+
+  .explore-pill {
+    font-size: 6px;
+  }
+
+  .adventure-bottom {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 7px;
+  }
+
+  .adventure-path {
+    width: 100%;
+
+    justify-content: space-between;
+  }
+
+  .adventure-path i {
+    flex: 1;
+  }
+
+  .progress-strip {
+    padding: 18px 13px;
+  }
+
+  .levels-section {
+    padding: 39px 13px;
+  }
+
+  .section-heading h2 {
+    font-size: 34px;
+  }
+
+  .game-dialog {
+    padding: 22px 18px;
+  }
+
+  .future-features {
+    gap: 5px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL PHONE
+========================================================= */
+
+@media (max-width: 390px) {
+  .hero-copy h1 {
+    font-size: 42px;
+  }
+
+  .quick-stats i {
+    height: 27px;
+  }
+
+  .adventure-path span {
+    font-size: 7px;
+  }
+
+  .future-content h3 {
+    font-size: 18px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+
+    animation-duration: 0.01ms !important;
+
+    animation-iteration-count: 1 !important;
+  }
+}

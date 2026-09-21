@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sanskrit Escape Room</title>
+    <link rel="stylesheet" href="../shared/css/app-shell.css" />
+    <link rel="stylesheet" href="css/game.css" />
+  </head>
+  <body>
+    <div id="appHeader"></div>
+
+    <main class="game-app">
+      <header class="game-header">
+        <div class="game-title-group">
+          <span id="levelBadge" class="level-badge">LEVEL</span>
+          <div class="game-title-copy">
+            <span id="roomName" class="room-name">ESCAPE ROOM</span>
+            <h1 id="gameTitle">Sanskrit Escape Room</h1>
+          </div>
+        </div>
+        <div class="mission-summary">
+          <span class="mission-dot"></span
+          ><span id="missionText">Find the key and escape</span>
+        </div>
+      </header>
+
+      <section class="clue-panel">
+        <div class="clue-icon">🔎</div>
+        <div class="clue-word">
+          <span id="clueProgress" class="clue-progress">CLUE</span>
+          <h2 id="sanskritWord">Loading...</h2>
+        </div>
+        <div class="clue-divider"></div>
+        <div class="clue-hint">
+          <span class="hint-label">HINT</span
+          ><strong id="englishClue">Loading level...</strong
+          ><span id="feedback" aria-live="polite"></span>
+        </div>
+      </section>
+
+      <section class="play-layout">
+        <div id="roomStage" class="room-stage">
+          <div id="roomPanel" class="room-panel">
+            <svg
+              id="roomMap"
+              preserveAspectRatio="xMidYMid meet"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <image
+                id="roomBackground"
+                x="0"
+                y="0"
+                preserveAspectRatio="xMidYMid meet"
+              ></image>
+              <g id="hotspotLayer"></g>
+            </svg>
+          </div>
+        </div>
+        <aside class="progress-panel">
+          <div class="progress-header">
+            <div>
+              <span class="progress-eyebrow">ESCAPE PROGRESS</span
+              ><strong>Follow the trail</strong>
+            </div>
+            <span id="progressCounter" class="progress-count">1 / 1</span>
+          </div>
+          <div
+            id="progressList"
+            class="progress"
+            aria-label="Escape progress"
+          ></div>
+          <div class="game-tip">
+            <span class="tip-symbol">💡</span>
+            <div>
+              <strong>Explorer tip</strong>
+              <p id="tipText">Look carefully around the room.</p>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <div id="storyPopup" class="popup hidden">
+      <div class="popup-card">
+        <div class="popup-symbol">🔎</div>
+        <span class="popup-eyebrow">CLUE DISCOVERED</span>
+        <h2 id="popupTitle">Great!</h2>
+        <p id="popupMessage"></p>
+        <button id="continueButton" type="button">Continue</button>
+      </div>
+    </div>
+    <div id="loadError" class="load-error hidden">
+      <div>
+        <h2>Level could not be loaded</h2>
+        <p>Please return to the Escape Room home screen.</p>
+        <a href="../index.html">Escape Room Home</a>
+      </div>
+    </div>
+
+    <dialog id="settingsDialog" class="game-settings-dialog">
+      <form method="dialog">
+        <button class="game-settings-close" value="cancel" aria-label="Close">
+          ×
+        </button>
+      </form>
+      <h2>Game Settings</h2>
+      <label
+        ><span
+          ><strong>Sound</strong
+          ><small>Use game and Sanskrit audio when available.</small></span
+        ><input id="soundSetting" type="checkbox" /></label
+      ><label
+        ><span
+          ><strong>Show hints</strong
+          ><small>Show the English hint under the Sanskrit clue.</small></span
+        ><input id="hintSetting" type="checkbox"
+      /></label>
+    </dialog>
+
+    <script type="module" src="js/game.js"></script>
+  </body>
+</html>

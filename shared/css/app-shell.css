@@ -1,0 +1,179 @@
+/* Shared top bar used by the Escape Room home and game screens. */
+
+.escape-app-header {
+  min-height: 60px;
+  padding: 8px clamp(10px, 1.4vw, 22px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  background: rgba(255,255,255,.96);
+  border-bottom: 1px solid #E2E8F0;
+  backdrop-filter: blur(14px);
+}
+
+.escape-app-header__left,
+.escape-app-header__right {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.app-icon-button {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border: 1px solid #E2E8F0;
+  border-radius: 11px;
+  background: #FFFFFF;
+  color: #1E293B;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .16s ease, border-color .16s ease, background .16s ease;
+}
+
+.app-icon-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(17,94,89,.35);
+  background: #F8FFFD;
+}
+
+.app-icon-button svg {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+}
+
+.app-icon-button.portal-home {
+  background: #0F3158;
+  color: #FFFFFF;
+  border-color: #0F3158;
+}
+
+.app-icon-button.is-muted .sound-wave { display: none; }
+.app-icon-button.is-muted::after { content: ""; position: absolute; width: 18px; height: 2px; background: currentColor; transform: rotate(-45deg); border-radius: 2px; }
+.app-icon-button { position: relative; }
+
+.escape-game-brand {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #1E293B;
+  text-decoration: none;
+}
+
+.escape-game-brand__mark {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: #FFF1D6;
+  color: #B45309;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.escape-game-brand > span:last-child {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.escape-game-brand strong {
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.escape-game-brand small {
+  margin-top: 3px;
+  color: #64748B;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .35px;
+}
+
+.escape-user-chip {
+  min-height: 38px;
+  padding: 4px 10px 4px 5px;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFFFF;
+}
+
+.escape-user-chip__avatar {
+  position: relative;
+  width: 29px;
+  height: 29px;
+  flex: 0 0 29px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: #FFF1D6;
+  color: #B45309;
+  border: 1px solid rgba(180,83,9,.28);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.escape-user-chip__avatar img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.escape-user-chip__copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.escape-user-chip__copy small {
+  color: #64748B;
+  font-size: 7px;
+  font-weight: 850;
+  letter-spacing: .8px;
+}
+
+.escape-user-chip__copy strong {
+  margin-top: 2px;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+@media (max-width: 640px) {
+  .escape-app-header { min-height: 54px; padding: 7px; gap: 7px; }
+  .escape-app-header__left, .escape-app-header__right { gap: 6px; }
+  .app-icon-button { width: 34px; height: 34px; flex-basis: 34px; border-radius: 10px; }
+  .app-icon-button svg { width: 17px; height: 17px; }
+  .escape-game-brand__mark { width: 34px; height: 34px; flex-basis: 34px; font-size: 18px; }
+  .escape-game-brand strong { font-size: 12px; }
+  .escape-game-brand small { display: none; }
+  .escape-user-chip { min-height: 34px; padding-right: 6px; }
+  .escape-user-chip__avatar { width: 25px; height: 25px; flex-basis: 25px; }
+  .escape-user-chip__copy small { display: none; }
+  .escape-user-chip__copy strong { max-width: 60px; font-size: 10px; }
+  .app-icon-button.game-home { display: none; }
+}
+
+@media (max-width: 420px) {
+  .escape-game-brand__mark { display: none; }
+  .escape-user-chip__copy { display: none; }
+  .escape-user-chip { padding: 4px; }
+}

@@ -1,208 +1,379 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Sanskrit Escape Room - kid-friendly language learning game prototype" />
-  <title>Sanskrit Escape Room</title>
-  <link rel="stylesheet" href="css/style.css" />
-</head>
-<body>
-  <div class="page-shell">
-    <header class="topbar">
-      <a class="brand" href="#" aria-label="Sanskrit Escape Room home">
-        <span class="brand-mark" aria-hidden="true">🔑</span>
-        <span>Sanskrit Escape Room</span>
-      </a>
+  <head>
+    <meta charset="UTF-8" />
 
-      <div class="account-area">
-        <span id="userStatus" class="user-status">Playing as Guest</span>
-        <button id="loginButton" class="button button-secondary" type="button">Login / Register</button>
-        <button id="logoutButton" class="button button-secondary hidden" type="button">Logout</button>
-      </div>
-    </header>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <main>
-      <section id="homeScreen" class="hero" aria-labelledby="gameTitle">
+    <meta
+      name="description"
+      content="Sanskrit Escape Room - follow Sanskrit clues, explore interactive rooms, solve puzzles, and escape."
+    />
+
+    <title>Sanskrit Escape Room</title>
+
+    <!-- Shared game header / app shell -->
+
+    <link rel="stylesheet" href="shared/css/app-shell.css" />
+
+    <!-- Home page styles -->
+
+    <link rel="stylesheet" href="assets/css/home.css" />
+  </head>
+
+  <body>
+    <!-- ==================================================
+       SHARED APP HEADER
+
+       AppHeader.js automatically adds:
+
+       - Portal home button
+       - Sanskrit Escape Room branding
+       - Sound button
+       - Settings button
+       - zat.am username / avatar
+  =================================================== -->
+
+    <div id="appHeader"></div>
+
+    <!-- ==================================================
+       HOME PAGE
+  =================================================== -->
+
+    <main class="home-main">
+      <!-- ==================================================
+         HERO
+    =================================================== -->
+
+      <section class="hero-shell">
+        <!-- ================================================
+           LEFT SIDE
+      ================================================= -->
+
         <div class="hero-copy">
-          <p class="eyebrow">A language-learning adventure</p>
-          <h1 id="gameTitle">Find clues. Learn Sanskrit. Escape the room.</h1>
-          <p class="hero-text">
-            Search for hidden objects, answer language questions, find the key, and escape before time runs out.
+          <span class="hero-kicker"> SANSKRIT ADVENTURE </span>
+
+          <h1>
+            Follow the clues.
+
+            <br />
+
+            <span> Escape the room. </span>
+          </h1>
+
+          <p class="hero-lead">
+            Read Sanskrit clues, explore mysterious rooms, discover hidden
+            objects, solve puzzles, and unlock your way through an expanding
+            adventure.
           </p>
 
+          <!-- ============================================
+             ACTIONS
+        ============================================= -->
+
           <div class="hero-actions">
-            <button id="startGameButton" class="button button-primary button-large" type="button">▶ Start Game</button>
-            <button id="howToPlayButton" class="button button-light button-large" type="button">How to Play</button>
-            <button id="settingsButton" class="button button-light button-large" type="button">⚙ Settings</button>
+            <!--
+            home.js automatically changes this to:
+
+            Start Adventure
+            Continue Adventure
+            Replay
+
+            depending on saved progress.
+          -->
+
+            <a
+              id="continueButton"
+              class="primary-action"
+              href="game/game.html?level=1"
+            >
+              <span class="action-icon" aria-hidden="true"> ▶ </span>
+
+              <span>
+                <small id="continueEyebrow"> START ADVENTURE </small>
+
+                <strong id="continueLabel"> Begin Your Journey </strong>
+              </span>
+            </a>
+
+            <button id="howToPlayButton" class="secondary-action" type="button">
+              How to Play
+            </button>
           </div>
 
-          <div class="save-note" role="note">
-            <span aria-hidden="true">💾</span>
-            <span>Login to save your progress on this browser. Guests can still play.</span>
+          <!-- ============================================
+             PLAYER STATS
+        ============================================= -->
+
+          <div class="quick-stats">
+            <div>
+              <strong id="completedStat"> 0 </strong>
+
+              <span> Rooms escaped </span>
+            </div>
+
+            <i aria-hidden="true"></i>
+
+            <div>
+              <strong id="unlockedStat"> 1 </strong>
+
+              <span> Levels unlocked </span>
+            </div>
+
+            <i aria-hidden="true"></i>
+
+            <div>
+              <strong id="attemptStat"> 0 </strong>
+
+              <span> Total attempts </span>
+            </div>
           </div>
         </div>
 
-        <div class="hero-visual" aria-label="Escape room game concept">
-          <div class="room-card">
-            <div class="room-topline">
-              <span class="timer-pill">⏱ 02:00</span>
-              <span class="score-pill">⭐ 0</span>
+        <!-- ================================================
+           RIGHT SIDE
+           GENERIC ADVENTURE WORLD
+
+           This no longer represents only Level 1.
+      ================================================= -->
+
+        <div
+          class="hero-preview"
+          aria-label="Sanskrit Escape Room adventure world"
+        >
+          <div class="adventure-window">
+            <!-- ==========================================
+               CARD HEADER
+          =========================================== -->
+
+            <div class="adventure-toolbar">
+              <div>
+                <span> YOUR ADVENTURE </span>
+
+                <strong> A world of Sanskrit puzzles </strong>
+              </div>
+
+              <span class="explore-pill"> EXPLORE </span>
             </div>
-            <div class="room-scene" aria-hidden="true">
-              <div class="window">☀️</div>
-              <div class="shelf">📚<br />📗📘</div>
-              <div class="desk">📖</div>
-              <div class="plant">🪴</div>
-              <div class="chest">🧰</div>
-              <div class="door">🚪</div>
-              <div class="key">🔑</div>
+
+            <!-- ==========================================
+               ADVENTURE MAP ART
+          =========================================== -->
+
+            <div class="adventure-image">
+              <img
+                src="assets/images/home/adventure-map.png"
+                alt="Illustrated Sanskrit Escape Room adventure map with connected puzzle locations, pathways, keys, and mystery rooms"
+              />
             </div>
-            <div class="clue-card">
-              <strong>Clue</strong>
-              <span>Find the hidden key.</span>
-              <button class="audio-demo" type="button" aria-label="Audio preview" disabled title="Audio clues will be added with the level content">🔊 Listen</button>
+
+            <!-- ==========================================
+               ADVENTURE FOOTER
+          =========================================== -->
+
+            <div class="adventure-bottom">
+              <div class="adventure-path">
+                <span> Explore </span>
+
+                <i aria-hidden="true"></i>
+
+                <span> Solve </span>
+
+                <i aria-hidden="true"></i>
+
+                <span> Unlock </span>
+
+                <i aria-hidden="true"></i>
+
+                <span> Escape </span>
+              </div>
+
+              <small> More adventures ahead </small>
             </div>
+          </div>
+
+          <!-- ============================================
+             DECORATIVE VERIFIED SANSKRIT CLUE
+
+             This is HTML text, not AI-generated text,
+             so we control its spelling.
+        ============================================= -->
+
+          <div class="floating-token token-word" aria-hidden="true">
+            <strong> पुस्तकम् </strong>
+
+            <small> Follow the clue </small>
+          </div>
+
+          <!-- ============================================
+             DECORATIVE KEY
+        ============================================= -->
+
+          <div class="floating-token token-key" aria-hidden="true">🔑</div>
+        </div>
+      </section>
+
+      <!-- ==================================================
+         PROGRESS STRIP
+    =================================================== -->
+
+      <section class="progress-strip">
+        <div>
+          <span class="section-kicker"> YOUR PROGRESS </span>
+
+          <h2 id="progressTitle">Ready for your first escape?</h2>
+
+          <p id="progressMessage">
+            Start with The Locked Study and follow the first Sanskrit clue.
+          </p>
+        </div>
+
+        <div class="progress-block">
+          <div class="progress-copy">
+            <span> Adventure progress </span>
+
+            <strong id="progressPercent"> 0% </strong>
+          </div>
+
+          <div
+            class="progress-track"
+            role="progressbar"
+            aria-label="Escape Room progress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
+            <div id="progressBar"></div>
           </div>
         </div>
       </section>
 
-      <section id="levelScreen" class="level-screen hidden" aria-labelledby="levelTitle">
+      <!-- ==================================================
+         LEVELS
+    =================================================== -->
+
+      <section class="levels-section" id="levels">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">Choose your challenge</p>
-            <h2 id="levelTitle">Select a Level</h2>
-            <p id="progressSummary" class="muted-text">Level 1 is ready.</p>
+            <span class="section-kicker"> ESCAPE ROOMS </span>
+
+            <h2>Choose your challenge</h2>
           </div>
-          <button id="backHomeButton" class="button button-light" type="button">← Back</button>
+
+          <p>
+            Complete rooms to unlock new challenges. Future adventures can
+            introduce harder Sanskrit, audio clues, questions, timers, and more
+            complex puzzles.
+          </p>
         </div>
 
-        <div class="level-grid">
-          <button class="level-card" type="button" data-level="1">
-            <span class="level-number">1</span>
-            <span class="level-name">The Study Room</span>
-            <span class="level-details">Simple words • More time</span>
-            <span class="level-state">Unlocked</span>
-          </button>
+        <!--
+        home.js creates level cards here automatically
+        from levels/manifest.js
+      -->
 
-          <button class="level-card locked" type="button" data-level="2" disabled>
-            <span class="level-number">2</span>
-            <span class="level-name">The Library</span>
-            <span class="level-details">More objects • Shorter timer</span>
-            <span class="level-state">🔒 Locked</span>
-          </button>
-
-          <button class="level-card locked" type="button" data-level="3" disabled>
-            <span class="level-number">3</span>
-            <span class="level-name">The Mystery Hall</span>
-            <span class="level-details">Harder words • Simple sentences</span>
-            <span class="level-state">🔒 Locked</span>
-          </button>
-        </div>
-
-        <div id="guestWarning" class="guest-warning">
-          You are playing as a guest. Your game progress will not be saved after you leave.
-        </div>
+        <div id="levelGrid" class="level-grid"></div>
       </section>
     </main>
-  </div>
 
-  <div id="modalBackdrop" class="modal-backdrop hidden" aria-hidden="true"></div>
+    <!-- ==================================================
+       HOW TO PLAY DIALOG
+  =================================================== -->
 
-  <section id="authModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-    <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
-    <h2 id="authTitle">Save your progress</h2>
-    <p class="muted-text">Login or create a local prototype account.</p>
+    <dialog id="howToPlayDialog" class="game-dialog">
+      <form method="dialog">
+        <button class="dialog-close" value="cancel" aria-label="Close">
+          ×
+        </button>
+      </form>
 
-    <div class="tab-row" role="tablist" aria-label="Account options">
-      <button id="loginTab" class="tab active" type="button" role="tab" aria-selected="true">Login</button>
-      <button id="registerTab" class="tab" type="button" role="tab" aria-selected="false">Register</button>
-    </div>
+      <span class="section-kicker"> HOW TO PLAY </span>
 
-    <form id="loginForm" class="auth-form">
-      <label>
-        Username
-        <input id="loginUsername" name="username" type="text" autocomplete="username" minlength="3" maxlength="20" required />
-      </label>
-      <label>
-        Password
-        <input id="loginPassword" name="password" type="password" autocomplete="current-password" minlength="6" required />
-      </label>
-      <button class="button button-primary" type="submit">Login</button>
-    </form>
+      <h2>Escape one clue at a time</h2>
 
-    <form id="registerForm" class="auth-form hidden">
-      <label>
-        Username
-        <input id="registerUsername" name="username" type="text" autocomplete="username" minlength="3" maxlength="20" required />
-      </label>
-      <label>
-        Password
-        <input id="registerPassword" name="password" type="password" autocomplete="new-password" minlength="6" required />
-      </label>
-      <label>
-        Confirm Password
-        <input id="registerPasswordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="6" required />
-      </label>
-      <button class="button button-primary" type="submit">Create Account</button>
-    </form>
+      <div class="instruction-list">
+        <div>
+          <span> 1 </span>
 
-    <p id="authMessage" class="form-message" aria-live="polite"></p>
-    <p class="prototype-note">
-      Prototype only: passwords are hashed before local storage, but real production authentication needs a secure backend or authentication provider.
-    </p>
-  </section>
+          <p>Read the Sanskrit word and the short clue.</p>
+        </div>
 
-  <section id="howToPlayModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="howToTitle">
-    <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
-    <h2 id="howToTitle">How to Play</h2>
-    <ol class="instruction-list">
-      <li><span>🔎</span><div><strong>Find hidden items</strong><p>Look around the room for the objects shown in your task list.</p></div></li>
-      <li><span>💬</span><div><strong>Answer a language question</strong><p>After finding an item, identify it or answer a short Sanskrit question.</p></div></li>
-      <li><span>🔑</span><div><strong>Find the key</strong><p>Every correct answer brings you closer to the key.</p></div></li>
-      <li><span>⏱️</span><div><strong>Beat the timer</strong><p>Unlock the door before time runs out.</p></div></li>
-    </ol>
-  </section>
+        <div>
+          <span> 2 </span>
 
-  <section id="settingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-    <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
-    <h2 id="settingsTitle">Settings</h2>
+          <p>Search the room and select the object that matches.</p>
+        </div>
 
-    <div class="setting-row">
-      <div>
-        <strong>Sound</strong>
-        <p>Play game sounds and pronunciation audio.</p>
+        <div>
+          <span> 3 </span>
+
+          <p>Each correct discovery reveals the next part of the story.</p>
+        </div>
+
+        <div>
+          <span> 4 </span>
+
+          <p>Follow the clues, find the key, and unlock the exit.</p>
+        </div>
       </div>
-      <label class="switch">
+
+      <a class="dialog-primary" href="game/game.html?level=1">
+        Start Adventure
+      </a>
+    </dialog>
+
+    <!-- ==================================================
+       SETTINGS DIALOG
+
+       Opened by the settings button in AppHeader.js
+  =================================================== -->
+
+    <dialog id="settingsDialog" class="game-dialog settings-dialog">
+      <form method="dialog">
+        <button class="dialog-close" value="cancel" aria-label="Close">
+          ×
+        </button>
+      </form>
+
+      <span class="section-kicker"> GAME SETTINGS </span>
+
+      <h2>Settings</h2>
+
+      <!-- SOUND -->
+
+      <label class="setting-row">
+        <span>
+          <strong> Sound </strong>
+
+          <small> Play Sanskrit audio and game sounds when available. </small>
+        </span>
+
         <input id="soundSetting" type="checkbox" />
-        <span class="slider" aria-hidden="true"></span>
       </label>
-    </div>
 
-    <div class="setting-row">
-      <div>
-        <strong>Reduced Motion</strong>
-        <p>Use fewer animations.</p>
-      </div>
-      <label class="switch">
-        <input id="motionSetting" type="checkbox" />
-        <span class="slider" aria-hidden="true"></span>
+      <!-- HINTS -->
+
+      <label class="setting-row">
+        <span>
+          <strong> Show hints </strong>
+
+          <small> Keep English hint text visible under Sanskrit clues. </small>
+        </span>
+
+        <input id="hintSetting" type="checkbox" />
       </label>
-    </div>
 
-    <button id="saveSettingsButton" class="button button-primary" type="button">Save Settings</button>
-    <p id="settingsMessage" class="form-message" aria-live="polite"></p>
-  </section>
+      <!-- RESET -->
 
-  <script src="js/models/UserModel.js"></script>
-  <script src="js/models/ProgressModel.js"></script>
-  <script src="js/models/SettingsModel.js"></script>
-  <script src="js/views/AuthView.js"></script>
-  <script src="js/views/MainMenuView.js"></script>
-  <script src="js/views/SettingsView.js"></script>
-  <script src="js/controllers/AuthController.js"></script>
-  <script src="js/controllers/MainMenuController.js"></script>
-  <script src="js/controllers/SettingsController.js"></script>
-  <script src="js/app.js"></script>
-</body>
+      <button id="resetProgressButton" class="danger-action" type="button">
+        Reset Escape Room progress
+      </button>
+    </dialog>
+
+    <!-- ==================================================
+       HOME PAGE JAVASCRIPT
+  =================================================== -->
+
+    <script type="module" src="assets/js/home.js"></script>
+  </body>
 </html>
