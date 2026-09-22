@@ -24,13 +24,24 @@ import { mountAppHeader } from "../../shared/js/AppHeader.js";
 const user = getZatamUser();
 
 /* =========================================================
-   LEVEL IDS
+   IMPLEMENTED LEVELS
 
-   Because manifest.js contains ONLY real levels,
-   our ProgressStore also only tracks real levels.
+   Only real, playable levels should affect:
+   - progress
+   - Continue button
+   - completed count
+   - unlocked count
 ========================================================= */
 
-const levelIds = levels.map((level) => level.id);
+const implementedLevels = levels
+  .filter((level) => level.implemented)
+  .sort((a, b) => a.id - b.id);
+
+/* =========================================================
+   LEVEL IDS
+========================================================= */
+
+const levelIds = implementedLevels.map((level) => level.id);
 
 /* =========================================================
    STORES
@@ -58,7 +69,9 @@ const hintSetting = document.getElementById("hintSetting");
 
 const resetProgressButton = document.getElementById("resetProgressButton");
 
-/* HERO CTA */
+/* =========================================================
+   HERO CTA
+========================================================= */
 
 const continueButton = document.getElementById("continueButton");
 
@@ -66,7 +79,9 @@ const continueEyebrow = document.getElementById("continueEyebrow");
 
 const continueLabel = document.getElementById("continueLabel");
 
-/* HERO STATS */
+/* =========================================================
+   HERO STATS
+========================================================= */
 
 const completedStat = document.getElementById("completedStat");
 
@@ -74,7 +89,9 @@ const unlockedStat = document.getElementById("unlockedStat");
 
 const attemptStat = document.getElementById("attemptStat");
 
-/* PROGRESS */
+/* =========================================================
+   PROGRESS
+========================================================= */
 
 const progressTitle = document.getElementById("progressTitle");
 
@@ -86,7 +103,9 @@ const progressBar = document.getElementById("progressBar");
 
 const progressTrack = document.querySelector(".progress-track");
 
-/* LEVEL GRID */
+/* =========================================================
+   LEVEL GRID
+========================================================= */
 
 const levelGrid = document.getElementById("levelGrid");
 
@@ -128,46 +147,137 @@ function pluralize(amount, singular, plural) {
 }
 
 /* =========================================================
+   GET SAVED LEVEL DATA
+
+   Supports both:
+
+   levels["1"]
+
+   and
+
+   levels[1]
+========================================================= */
+
+function getSavedLevelState(state, levelId) {
+  return state.levels?.[String(levelId)] || state.levels?.[levelId] || null;
+}
+
+/* =========================================================
    GET LEVEL STATE
 
-   Protects us if a new level is added to manifest.js
-   before the user's local progress structure is updated.
+   IMPORTANT FIX:
+
+   We also derive unlocking from the completion
+   of the previous level.
+
+   This means:
+
+   Level 1 complete
+          ↓
+   Level 2 becomes available
+
+   even if an older saved progress object still
+   says Level 2 unlocked: false.
 ========================================================= */
 
 function getLevelState(state, level, index) {
-  const saved = state.levels?.[level.id];
+  const saved = getSavedLevelState(state, level.id);
 
-  /*
-    First actual game level should always be accessible.
-  */
+  const defaultState = {
+    unlocked: false,
 
-  if (index === 0 && !saved) {
-    return {
-      unlocked: true,
+    completed: false,
 
-      completed: false,
+    attempts: 0,
 
-      attempts: 0,
+    bestScore: 0,
 
-      bestScore: 0,
+    bestTimeSeconds: null,
+  };
 
-      bestTimeSeconds: null,
-    };
+  const levelState = {
+    ...defaultState,
+
+    ...(saved || {}),
+  };
+
+  /* =======================================================
+     FIRST LEVEL IS ALWAYS UNLOCKED
+  ======================================================= */
+
+  if (index === 0) {
+    levelState.unlocked = true;
   }
 
-  return (
-    saved || {
-      unlocked: false,
+  /* =======================================================
+     COMPLETED LEVELS REMAIN UNLOCKED
+  ======================================================= */
 
-      completed: false,
+  if (levelState.completed) {
+    levelState.unlocked = true;
+  }
 
-      attempts: 0,
+  /* =======================================================
+     UNLOCK NEXT LEVEL WHEN PREVIOUS LEVEL IS COMPLETE
+  ======================================================= */
 
-      bestScore: 0,
+  if (index > 0 && !levelState.unlocked) {
+    const previousLevel = implementedLevels[index - 1];
 
-      bestTimeSeconds: null,
+    const previousState = getSavedLevelState(state, previousLevel.id);
+
+    if (previousState?.completed) {
+      levelState.unlocked = true;
     }
+  }
+
+  return levelState;
+}
+
+/* =========================================================
+   GET NEXT INCOMPLETE LEVEL
+
+   IMPORTANT:
+
+   DO NOT use progress.currentLevel
+   to choose the homepage Continue button.
+
+   Instead find the FIRST implemented level
+   that has not been completed.
+
+   Example:
+
+   Level 1 = completed
+   Level 2 = not completed
+
+   Result:
+   The Missing Ticket
+========================================================= */
+
+function getNextIncompleteLevel(levelList, progress) {
+  const playableLevels = levelList
+    .filter((level) => level.implemented)
+    .sort((a, b) => a.id - b.id);
+
+  return (
+    playableLevels.find((level) => {
+      const levelProgress = getSavedLevelState(progress, level.id);
+
+      return !levelProgress?.completed;
+    }) || null
   );
+}
+
+/* =========================================================
+   COMPLETED LEVEL COUNT
+========================================================= */
+
+function getCompletedCount(progress) {
+  return implementedLevels.filter((level) => {
+    const levelProgress = getSavedLevelState(progress, level.id);
+
+    return Boolean(levelProgress?.completed);
+  }).length;
 }
 
 /* =========================================================
@@ -181,7 +291,7 @@ function calculateSummary(state) {
 
   let totalAttempts = 0;
 
-  levels.forEach((level, index) => {
+  implementedLevels.forEach((level, index) => {
     const levelState = getLevelState(state, level, index);
 
     if (levelState.unlocked) {
@@ -195,7 +305,7 @@ function calculateSummary(state) {
     totalAttempts += Number(levelState.attempts) || 0;
   });
 
-  const totalLevels = levels.length;
+  const totalLevels = implementedLevels.length;
 
   const percentage =
     totalLevels > 0 ? Math.round((roomsEscaped / totalLevels) * 100) : 0;
@@ -211,70 +321,6 @@ function calculateSummary(state) {
 
     percentage,
   };
-}
-
-/* =========================================================
-   FIND NEXT LEVEL TO PLAY
-========================================================= */
-
-function findCurrentAdventure(state) {
-  /*
-    First look for an unlocked level
-    that is not complete.
-  */
-
-  for (let index = 0; index < levels.length; index++) {
-    const level = levels[index];
-
-    const levelState = getLevelState(state, level, index);
-
-    if (levelState.unlocked && !levelState.completed) {
-      return {
-        level,
-
-        levelState,
-
-        index,
-      };
-    }
-  }
-
-  /*
-    If all currently available levels are complete,
-    replay the highest unlocked real level.
-  */
-
-  for (let index = levels.length - 1; index >= 0; index--) {
-    const level = levels[index];
-
-    const levelState = getLevelState(state, level, index);
-
-    if (levelState.unlocked) {
-      return {
-        level,
-
-        levelState,
-
-        index,
-      };
-    }
-  }
-
-  /*
-    Ultimate fallback.
-  */
-
-  if (levels.length > 0) {
-    return {
-      level: levels[0],
-
-      levelState: getLevelState(state, levels[0], 0),
-
-      index: 0,
-    };
-  }
-
-  return null;
 }
 
 /* =========================================================
@@ -296,19 +342,25 @@ function renderStatLabels(summary) {
 
   escapedLabel.textContent = pluralize(
     summary.roomsEscaped,
+
     "Room escaped",
+
     "Rooms escaped",
   );
 
   unlockedLabel.textContent = pluralize(
     summary.levelsUnlocked,
+
     "Level unlocked",
+
     "Levels unlocked",
   );
 
   attemptLabel.textContent = pluralize(
     summary.totalAttempts,
+
     "Attempt",
+
     "Attempts",
   );
 }
@@ -322,7 +374,13 @@ function renderSummary() {
 
   const summary = calculateSummary(state);
 
-  const adventure = findCurrentAdventure(state);
+  /* =======================================================
+     FIND THE FIRST UNFINISHED IMPLEMENTED LEVEL
+  ======================================================= */
+
+  const nextLevel = getNextIncompleteLevel(implementedLevels, state);
+
+  const completedCount = getCompletedCount(state);
 
   /* =======================================================
      STATS
@@ -345,16 +403,18 @@ function renderSummary() {
   progressBar.style.width = `${summary.percentage}%`;
 
   if (progressTrack) {
-    progressTrack.setAttribute("aria-valuenow", String(summary.percentage));
+    progressTrack.setAttribute(
+      "aria-valuenow",
+
+      String(summary.percentage),
+    );
   }
 
   /* =======================================================
-     NO REAL LEVELS YET
-
-     Defensive fallback.
+     NO IMPLEMENTED LEVELS
   ======================================================= */
 
-  if (!adventure) {
+  if (implementedLevels.length === 0) {
     continueButton.href = "#levels";
 
     continueEyebrow.textContent = "COMING SOON";
@@ -369,66 +429,128 @@ function renderSummary() {
     return;
   }
 
-  const { level, levelState } = adventure;
-
-  continueButton.href = level.href;
-
   /* =======================================================
-     ALL CURRENT LEVELS COMPLETE
+     THERE IS AN UNFINISHED LEVEL
   ======================================================= */
 
-  if (summary.roomsEscaped === summary.totalLevels) {
-    continueEyebrow.textContent = "PLAY AGAIN";
+  if (nextLevel) {
+    const nextLevelIndex = implementedLevels.findIndex(
+      (level) => level.id === nextLevel.id,
+    );
 
-    continueLabel.textContent = `Replay ${level.title}`;
+    const nextLevelState = getLevelState(state, nextLevel, nextLevelIndex);
 
-    progressTitle.textContent =
-      summary.roomsEscaped === 1
-        ? "You escaped the available room!"
-        : "You escaped every available room!";
+    /*
+      IMPORTANT:
 
-    progressMessage.textContent =
-      "Replay an adventure anytime while new Sanskrit challenges are being created.";
+      We update the EXISTING children:
 
-    return;
-  }
+      continueEyebrow
+      continueLabel
 
-  /* =======================================================
-     CURRENT LEVEL IN PROGRESS
-  ======================================================= */
+      We DO NOT use:
 
-  if ((Number(levelState.attempts) || 0) > 0) {
+      continueButton.textContent
+
+      because that would destroy the existing
+      button layout.
+    */
+
+    continueButton.href = nextLevel.href;
+
+    /* =====================================================
+       BEFORE LEVEL 1
+
+       Brand-new player.
+    ===================================================== */
+
+    if (completedCount === 0 && (Number(nextLevelState.attempts) || 0) === 0) {
+      continueEyebrow.textContent = "START ADVENTURE";
+
+      continueLabel.textContent = "Start Adventure";
+
+      progressTitle.textContent = "Ready for your first escape?";
+
+      progressMessage.textContent = `Start with ${nextLevel.title} and follow the first Sanskrit clue.`;
+
+      return;
+    }
+
+    /* =====================================================
+       LEVEL STARTED BUT NOT COMPLETED
+
+       Example:
+       Player exits Level 1 halfway through.
+    ===================================================== */
+
+    if (completedCount === 0 && (Number(nextLevelState.attempts) || 0) > 0) {
+      continueEyebrow.textContent = "CONTINUE ADVENTURE";
+
+      continueLabel.textContent = `Continue: ${nextLevel.title}`;
+
+      progressTitle.textContent = `Continue ${nextLevel.title}`;
+
+      progressMessage.textContent =
+        "Your Escape Room progress is saved for this zat.am player on this device.";
+
+      return;
+    }
+
+    /* =====================================================
+       PREVIOUS LEVEL COMPLETED
+
+       Example:
+
+       Level 1 complete
+       Level 2 incomplete
+
+       Hero now says:
+
+       CONTINUE ADVENTURE
+       Continue: The Missing Ticket
+    ===================================================== */
+
     continueEyebrow.textContent = "CONTINUE ADVENTURE";
 
-    continueLabel.textContent = `Continue ${level.title}`;
+    continueLabel.textContent = `Continue: ${nextLevel.title}`;
 
-    progressTitle.textContent = `Continue ${level.title}`;
+    progressTitle.textContent = `${nextLevel.title} is unlocked!`;
 
     progressMessage.textContent =
-      "Your Escape Room progress is saved for this zat.am player on this device.";
+      "Your next Sanskrit Escape Room challenge is ready.";
 
     return;
   }
 
   /* =======================================================
-     BRAND NEW PLAYER / NEW UNLOCKED LEVEL
+     ALL IMPLEMENTED LEVELS COMPLETED
+
+     Example:
+
+     Level 1 ✅
+     Level 2 ✅
+
+     Hero:
+
+     PLAY AGAIN
+     Replay Adventure
   ======================================================= */
 
-  continueEyebrow.textContent =
-    summary.roomsEscaped > 0 ? "NEXT ADVENTURE" : "START ADVENTURE";
+  const firstLevel = implementedLevels[0];
 
-  continueLabel.textContent =
-    summary.roomsEscaped > 0 ? `Play ${level.title}` : "Begin Your Journey";
+  continueEyebrow.textContent = "PLAY AGAIN";
+
+  continueLabel.textContent = "Replay Adventure";
+
+  continueButton.href = firstLevel?.href || "game/game.html?level=1";
 
   progressTitle.textContent =
-    summary.roomsEscaped > 0
-      ? `${level.title} is unlocked!`
-      : "Ready for your first escape?";
+    summary.roomsEscaped === 1
+      ? "You escaped the available room!"
+      : "You escaped every available room!";
 
   progressMessage.textContent =
-    summary.roomsEscaped > 0
-      ? "A new Sanskrit Escape Room challenge is ready."
-      : `Start with ${level.title} and follow the first Sanskrit clue.`;
+    "Replay an adventure anytime while new Sanskrit challenges are being created.";
 }
 
 /* =========================================================
@@ -726,7 +848,7 @@ function createFutureAdventureCard() {
 function renderLevels() {
   const state = getProgressSnapshot();
 
-  const cards = levels.map((level, index) => {
+  const cards = implementedLevels.map((level, index) => {
     return createLevelCard(level, state, index);
   });
 

@@ -1,15 +1,4 @@
-/* =========================================================
-   SANSKRIT ESCAPE ROOM
-   LEVEL MANIFEST
-
-   Only real levels should be added here.
-========================================================= */
-
 const levels = [
-  /* =======================================================
-     LEVEL 1
-  ======================================================= */
-
   {
     id: 1,
 
@@ -20,12 +9,6 @@ const levels = [
 
     difficulty: "Easy",
 
-    /*
-      IMPORTANT:
-      This tells the application that this level
-      actually exists and can be played.
-    */
-
     implemented: true,
 
     image: new URL(
@@ -33,11 +16,27 @@ const levels = [
       import.meta.url,
     ).href,
 
-    /*
-      This is the actual game URL.
-    */
-
     href: "game/game.html?level=1",
+  },
+
+  {
+    id: 2,
+
+    title: "The Missing Ticket",
+
+    description:
+      "Follow Sanskrit clues through a busy station, find your missing ticket, and reach the correct train.",
+
+    difficulty: "Easy–Medium",
+
+    implemented: true,
+
+    image: new URL(
+      "../assets/images/levels/level-2/background.png",
+      import.meta.url,
+    ).href,
+
+    href: "game/game.html?level=2",
   },
 ];
 

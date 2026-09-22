@@ -1,13 +1,13 @@
 :root {
-  --ink: #1E293B;
-  --border: #E2E8F0;
-  --white: #FFFFFF;
-  --muted: #64748B;
-  --amber-dark: #B45309;
-  --amber: #D97706;
-  --teal-dark: #115E59;
-  --teal: #2DD4BF;
-  --cream: #EFE9DC;
+  --ink: #1e293b;
+  --border: #e2e8f0;
+  --white: #ffffff;
+  --muted: #64748b;
+  --amber-dark: #b45309;
+  --amber: #d97706;
+  --teal-dark: #115e59;
+  --teal: #2dd4bf;
+  --cream: #efe9dc;
 
   --radius-sm: 10px;
   --radius-md: 14px;
@@ -17,11 +17,25 @@
   --shadow-room: 0 10px 30px rgba(30, 41, 59, 0.14);
 }
 
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; width: 100%; }
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
 
 body {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
   color: var(--ink);
   background: var(--cream);
 }
@@ -75,7 +89,9 @@ body {
   letter-spacing: 1px;
 }
 
-.game-title-copy { min-width: 0; }
+.game-title-copy {
+  min-width: 0;
+}
 
 .room-name {
   display: block;
@@ -242,7 +258,7 @@ body {
 
 .hotspot:focus-visible {
   outline: none;
-  fill: rgba(45, 212, 191, 0.10);
+  fill: rgba(45, 212, 191, 0.1);
   stroke: var(--teal);
   stroke-width: 4px;
 }
@@ -288,7 +304,9 @@ body.debug-hotspots .hotspot {
   letter-spacing: 1.2px;
 }
 
-.progress-header strong { font-size: 14px; }
+.progress-header strong {
+  font-size: 14px;
+}
 
 .progress-count {
   flex-shrink: 0;
@@ -363,12 +381,21 @@ body.debug-hotspots .hotspot {
   font-size: 10px;
 }
 
-.step.active { background: rgba(45, 212, 191, 0.11); }
-.step.active .step-number { background: var(--teal-dark); color: var(--white); }
+.step.active {
+  background: rgba(45, 212, 191, 0.11);
+}
+.step.active .step-number {
+  background: var(--teal-dark);
+  color: var(--white);
+}
 .step.active .step-title,
-.step.active .step-status { color: var(--teal-dark); }
+.step.active .step-status {
+  color: var(--teal-dark);
+}
 
-.step.complete { opacity: 0.8; }
+.step.complete {
+  opacity: 0.8;
+}
 .step.complete .step-number {
   background: var(--teal);
   color: var(--ink);
@@ -379,8 +406,12 @@ body.debug-hotspots .hotspot {
   font-size: 12px;
   font-weight: 900;
 }
-.step.complete .step-status { color: var(--teal-dark); }
-.step.locked { opacity: 0.43; }
+.step.complete .step-status {
+  color: var(--teal-dark);
+}
+.step.locked {
+  opacity: 0.43;
+}
 
 .game-tip {
   padding: 10px;
@@ -391,9 +422,21 @@ body.debug-hotspots .hotspot {
   border-radius: var(--radius-sm);
 }
 
-.tip-symbol { flex-shrink: 0; font-size: 14px; }
-.game-tip strong { display: block; margin-bottom: 2px; font-size: 10px; }
-.game-tip p { margin: 0; color: var(--muted); font-size: 9px; line-height: 1.35; }
+.tip-symbol {
+  flex-shrink: 0;
+  font-size: 14px;
+}
+.game-tip strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 10px;
+}
+.game-tip p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.35;
+}
 
 /* Popup */
 .popup {
@@ -407,7 +450,9 @@ body.debug-hotspots .hotspot {
   backdrop-filter: blur(4px);
 }
 
-.popup.hidden { display: none; }
+.popup.hidden {
+  display: none;
+}
 
 .popup-card {
   width: min(430px, 100%);
@@ -419,7 +464,10 @@ body.debug-hotspots .hotspot {
   box-shadow: 0 22px 60px rgba(30, 41, 59, 0.3);
 }
 
-.popup-symbol { margin-bottom: 5px; font-size: 33px; }
+.popup-symbol {
+  margin-bottom: 5px;
+  font-size: 33px;
+}
 .popup-eyebrow {
   display: block;
   color: var(--teal-dark);
@@ -427,8 +475,16 @@ body.debug-hotspots .hotspot {
   font-weight: 800;
   letter-spacing: 1.3px;
 }
-.popup-card h2 { margin: 6px 0 7px; font-size: 22px; }
-.popup-card p { margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.popup-card h2 {
+  margin: 6px 0 7px;
+  font-size: 22px;
+}
+.popup-card p {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
 .popup-card button {
   min-width: 115px;
   padding: 10px 21px;
@@ -451,102 +507,442 @@ body.debug-hotspots .hotspot {
   text-align: center;
   background: var(--cream);
 }
-.load-error.hidden { display: none; }
+.load-error.hidden {
+  display: none;
+}
+
+.audio-clue-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  margin-top: 10px;
+  padding: 10px 18px;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: #0f3158;
+  color: #ffffff;
+
+  font: inherit;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.audio-clue-button:hover {
+  transform: translateY(-1px);
+}
+
+.audio-clue-button:active {
+  transform: translateY(0);
+}
+
+.audio-clue-button.hidden {
+  display: none;
+}
+
+/* =========================================================
+   AUDIO CLUE
+   ========================================================= */
+
+.audio-clue-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.audio-clue-row #englishClue {
+  flex: 1;
+  margin: 0;
+}
+
+.audio-clue-icon {
+  width: 38px;
+  height: 38px;
+
+  flex: 0 0 38px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid rgba(15, 49, 88, 0.14);
+  border-radius: 50%;
+
+  background: #ffffff;
+  color: #0f3158;
+
+  box-shadow: 0 2px 8px rgba(15, 49, 88, 0.08);
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.audio-clue-icon:hover {
+  background: #0f3158;
+  color: #ffffff;
+
+  border-color: #0f3158;
+
+  box-shadow: 0 5px 14px rgba(15, 49, 88, 0.16);
+
+  transform: translateY(-1px);
+}
+
+.audio-clue-icon:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.audio-clue-icon:focus-visible {
+  outline: 3px solid rgba(45, 212, 191, 0.35);
+  outline-offset: 3px;
+}
+
+.audio-clue-icon svg {
+  display: block;
+  pointer-events: none;
+}
+
+.audio-clue-icon.hidden {
+  display: none;
+}
+
+.audio-word-hidden {
+  display: none;
+}
+
+/* =========================================================
+   LEVEL COMPLETE — SECONDARY HOME BUTTON
+========================================================= */
+
+#homeButton.completion-home-button {
+  display: block;
+
+  width: fit-content;
+  min-width: 170px;
+
+  margin: 14px auto 0;
+
+  padding: 10px 20px;
+
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #334155;
+
+  font: inherit;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow: none;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+#homeButton.completion-home-button:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f3158;
+
+  transform: translateY(-1px);
+}
+
+#homeButton.completion-home-button:active {
+  transform: translateY(0);
+}
+
+#homeButton.completion-home-button:focus-visible {
+  outline: 3px solid rgba(45, 212, 191, 0.3);
+  outline-offset: 3px;
+}
+
+#homeButton.completion-home-button.hidden {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .audio-clue-icon {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+  }
+}
 
 /* Large screens */
 @media (min-width: 2100px) {
-  .game-app { width: 1900px; }
-  .play-layout { grid-template-columns: minmax(0, 1fr) 300px; }
+  .game-app {
+    width: 1900px;
+  }
+  .play-layout {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
 }
 
 /* Short laptops */
 @media (max-height: 760px) and (min-width: 1025px) {
-  .game-app { padding: 6px 10px; gap: 5px; }
-  .game-header { min-height: 34px; }
+  .game-app {
+    padding: 6px 10px;
+    gap: 5px;
+  }
+  .game-header {
+    min-height: 34px;
+  }
   .room-name,
-  .mission-summary { display: none; }
-  .game-title-copy h1 { font-size: 27px; }
-  .clue-panel { min-height: 55px; padding: 5px 11px; }
-  .clue-icon { width: 31px; height: 31px; font-size: 16px; }
-  #sanskritWord { font-size: 24px; }
-  .progress-panel { padding: 10px; }
-  .step { min-height: 45px; }
-  .game-tip { display: none; }
+  .mission-summary {
+    display: none;
+  }
+  .game-title-copy h1 {
+    font-size: 27px;
+  }
+  .clue-panel {
+    min-height: 55px;
+    padding: 5px 11px;
+  }
+  .clue-icon {
+    width: 31px;
+    height: 31px;
+    font-size: 16px;
+  }
+  #sanskritWord {
+    font-size: 24px;
+  }
+  .progress-panel {
+    padding: 10px;
+  }
+  .step {
+    min-height: 45px;
+  }
+  .game-tip {
+    display: none;
+  }
 }
 
 /* Tablet / small laptop */
 @media (max-width: 1024px) {
-  body { min-height: 100svh; overflow-y: auto; }
-  .game-app { min-height: 100svh; }
-  .play-layout { display: flex; flex-direction: column; }
-  .progress-panel { order: -1; height: auto; padding: 7px; }
+  body {
+    min-height: 100svh;
+    overflow-y: auto;
+  }
+  .game-app {
+    min-height: 100svh;
+  }
+  .play-layout {
+    display: flex;
+    flex-direction: column;
+  }
+  .progress-panel {
+    order: -1;
+    height: auto;
+    padding: 7px;
+  }
   .progress-header,
-  .game-tip { display: none; }
+  .game-tip {
+    display: none;
+  }
   .progress {
     margin: 0;
     display: grid;
     grid-template-columns: repeat(var(--progress-count, 5), minmax(0, 1fr));
     gap: 5px;
   }
-  .step { min-height: 45px; padding: 5px; justify-content: center; }
-  .step:not(:last-child)::after { display: none; }
-  .step-copy { align-items: center; text-align: center; }
-  .step-status { display: none; }
-  .room-stage { height: auto; }
-  .room-panel { width: 100% !important; height: auto !important; }
-  #roomMap { height: auto; }
+  .step {
+    min-height: 45px;
+    padding: 5px;
+    justify-content: center;
+  }
+  .step:not(:last-child)::after {
+    display: none;
+  }
+  .step-copy {
+    align-items: center;
+    text-align: center;
+  }
+  .step-status {
+    display: none;
+  }
+  .room-stage {
+    height: auto;
+  }
+  .room-panel {
+    width: 100% !important;
+    height: auto !important;
+  }
+  #roomMap {
+    height: auto;
+  }
 }
 
 /* Phone */
 @media (max-width: 640px) {
-  .game-app { padding: 7px; }
-  .game-title-group { gap: 7px; }
-  .level-badge { padding: 5px 7px; font-size: 8px; }
+  .game-app {
+    padding: 7px;
+  }
+  .game-title-group {
+    gap: 7px;
+  }
+  .level-badge {
+    padding: 5px 7px;
+    font-size: 8px;
+  }
   .room-name,
-  .mission-summary { display: none; }
-  .game-title-copy h1 { font-size: clamp(20px, 6vw, 25px); }
+  .mission-summary {
+    display: none;
+  }
+  .game-title-copy h1 {
+    font-size: clamp(20px, 6vw, 25px);
+  }
   .clue-panel {
     min-height: 58px;
     padding: 6px 8px;
     grid-template-columns: auto minmax(85px, 105px) 1px minmax(0, 1fr);
     gap: 7px;
   }
-  .clue-icon { width: 29px; height: 29px; font-size: 14px; }
+  .clue-icon {
+    width: 29px;
+    height: 29px;
+    font-size: 14px;
+  }
   .clue-progress,
-  .hint-label { font-size: 7px; }
-  #sanskritWord { font-size: 21px; }
-  #englishClue { font-size: 11px; }
-  #feedback { font-size: 9px; }
-  .progress-panel { padding: 5px; }
-  .progress { gap: 3px; }
-  .step { min-height: 39px; padding: 3px 1px; flex-direction: column; gap: 2px; }
-  .step-number { flex-basis: 20px; width: 20px; height: 20px; font-size: 9px; }
-  .step-title { font-size: 8px; }
-  .room-panel { border-radius: 10px; }
+  .hint-label {
+    font-size: 7px;
+  }
+  #sanskritWord {
+    font-size: 21px;
+  }
+  #englishClue {
+    font-size: 11px;
+  }
+  #feedback {
+    font-size: 9px;
+  }
+  .progress-panel {
+    padding: 5px;
+  }
+  .progress {
+    gap: 3px;
+  }
+  .step {
+    min-height: 39px;
+    padding: 3px 1px;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .step-number {
+    flex-basis: 20px;
+    width: 20px;
+    height: 20px;
+    font-size: 9px;
+  }
+  .step-title {
+    font-size: 8px;
+  }
+  .room-panel {
+    border-radius: 10px;
+  }
 }
 
 @media (max-width: 390px) {
   .level-badge,
-  .clue-icon { display: none; }
-  .clue-panel { grid-template-columns: 90px 1px minmax(0, 1fr); }
-  .game-title-copy h1 { font-size: 20px; }
+  .clue-icon {
+    display: none;
+  }
+  .clue-panel {
+    grid-template-columns: 90px 1px minmax(0, 1fr);
+  }
+  .game-title-copy h1 {
+    font-size: 20px;
+  }
 }
-
 
 /* ===== Portal-ready shell additions ===== */
 @media (min-width: 1025px) {
-  body { height: 100dvh; overflow: hidden; }
-  .game-app { height: calc(100dvh - 60px); }
+  body {
+    height: 100dvh;
+    overflow: hidden;
+  }
+  .game-app {
+    height: calc(100dvh - 60px);
+  }
 }
 .hide-game-hints .hint-label,
-.hide-game-hints #englishClue { visibility: hidden; }
-.game-settings-dialog { width:min(460px,calc(100% - 28px)); padding:24px; border:1px solid var(--border); border-radius:18px; background:var(--white); color:var(--ink); box-shadow:0 24px 65px rgba(30,41,59,.28); }
-.game-settings-dialog::backdrop { background:rgba(30,41,59,.62); backdrop-filter:blur(4px); }
-.game-settings-dialog h2 { margin:0 0 14px; }
-.game-settings-dialog label { padding:12px 0; display:flex; align-items:center; justify-content:space-between; gap:20px; border-bottom:1px solid var(--border); }
-.game-settings-dialog label span { display:flex; flex-direction:column; }
-.game-settings-dialog label strong { font-size:12px; }
-.game-settings-dialog label small { margin-top:3px; color:var(--muted); font-size:9px; }
-.game-settings-dialog input { width:18px; height:18px; accent-color:var(--teal-dark); }
-.game-settings-close { position:absolute; right:14px; top:14px; width:32px; height:32px; border:1px solid var(--border); border-radius:50%; background:var(--white); cursor:pointer; font-size:18px; }
-.load-error a { color:var(--teal-dark); font-weight:800; }
+.hide-game-hints #englishClue {
+  visibility: hidden;
+}
+.game-settings-dialog {
+  width: min(460px, calc(100% - 28px));
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 24px 65px rgba(30, 41, 59, 0.28);
+}
+.game-settings-dialog::backdrop {
+  background: rgba(30, 41, 59, 0.62);
+  backdrop-filter: blur(4px);
+}
+.game-settings-dialog h2 {
+  margin: 0 0 14px;
+}
+.game-settings-dialog label {
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.game-settings-dialog label span {
+  display: flex;
+  flex-direction: column;
+}
+.game-settings-dialog label strong {
+  font-size: 12px;
+}
+.game-settings-dialog label small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 9px;
+}
+.game-settings-dialog input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--teal-dark);
+}
+.game-settings-close {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--white);
+  cursor: pointer;
+  font-size: 18px;
+}
+.load-error a {
+  color: var(--teal-dark);
+  font-weight: 800;
+}
