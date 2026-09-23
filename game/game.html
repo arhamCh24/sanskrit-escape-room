@@ -2,40 +2,57 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Sanskrit Escape Room</title>
+
     <link rel="stylesheet" href="../shared/css/app-shell.css" />
+
     <link rel="stylesheet" href="css/game.css" />
+
+    <link rel="stylesheet" href="css/performance.css" />
   </head>
+
   <body>
     <div id="appHeader"></div>
 
     <main class="game-app">
       <header class="game-header">
         <div class="game-title-group">
-          <span id="levelBadge" class="level-badge">LEVEL</span>
+          <span id="levelBadge" class="level-badge"> LEVEL </span>
+
           <div class="game-title-copy">
-            <span id="roomName" class="room-name">ESCAPE ROOM</span>
+            <span id="roomName" class="room-name"> ESCAPE ROOM </span>
+
             <h1 id="gameTitle">Sanskrit Escape Room</h1>
           </div>
         </div>
+
         <div class="mission-summary">
-          <span class="mission-dot"></span
-          ><span id="missionText">Find the key and escape</span>
+          <span class="mission-dot"></span>
+
+          <span id="missionText"> Find the key and escape </span>
         </div>
       </header>
 
       <section class="clue-panel">
         <div class="clue-icon">🔎</div>
+
         <div class="clue-word">
-          <span id="clueProgress" class="clue-progress">CLUE</span>
+          <span id="clueProgress" class="clue-progress"> CLUE </span>
+
           <h2 id="sanskritWord">Loading...</h2>
         </div>
+
         <div class="clue-divider"></div>
+
         <div class="clue-hint">
-          <span class="hint-label">HINT</span
-          ><strong id="englishClue">Loading level...</strong
-          ><span id="feedback" aria-live="polite"></span>
+          <span class="hint-label"> HINT </span>
+
+          <strong id="englishClue"> Loading level... </strong>
+
+          <span id="feedback" aria-live="polite"></span>
         </div>
       </section>
 
@@ -53,27 +70,66 @@
                 y="0"
                 preserveAspectRatio="xMidYMid meet"
               ></image>
+
               <g id="hotspotLayer"></g>
             </svg>
           </div>
         </div>
+
         <aside class="progress-panel">
           <div class="progress-header">
             <div>
-              <span class="progress-eyebrow">ESCAPE PROGRESS</span
-              ><strong>Follow the trail</strong>
+              <span class="progress-eyebrow"> ESCAPE PROGRESS </span>
+
+              <strong> Follow the trail </strong>
             </div>
-            <span id="progressCounter" class="progress-count">1 / 1</span>
+
+            <span id="progressCounter" class="progress-count"> 1 / 1 </span>
           </div>
+
+          <!--
+            SCORE / TIMER / CHANCES
+          -->
+          <div
+            id="performancePanel"
+            class="performance-panel hidden"
+            aria-label="Level performance"
+          >
+            <div id="scoreStat" class="performance-stat hidden">
+              <span> SCORE </span>
+
+              <strong>
+                <span id="scoreValue"> 100 </span>
+
+                <small id="scoreMax"> / 100 </small>
+              </strong>
+            </div>
+
+            <div id="timerStat" class="performance-stat hidden">
+              <span> TIME </span>
+
+              <strong id="timerValue"> 00:00 </strong>
+            </div>
+
+            <div id="chancesStat" class="performance-stat hidden">
+              <span> CHANCES </span>
+
+              <strong id="chancesValue"> 3 / 3 </strong>
+            </div>
+          </div>
+
           <div
             id="progressList"
             class="progress"
             aria-label="Escape progress"
           ></div>
+
           <div class="game-tip">
-            <span class="tip-symbol">💡</span>
+            <span class="tip-symbol"> 💡 </span>
+
             <div>
-              <strong>Explorer tip</strong>
+              <strong> Explorer tip </strong>
+
               <p id="tipText">Look carefully around the room.</p>
             </div>
           </div>
@@ -81,22 +137,58 @@
       </section>
     </main>
 
+    <!-- =====================================================
+         STORY / COMPLETION / TIME-UP POPUP
+    ====================================================== -->
+
     <div id="storyPopup" class="popup hidden">
       <div class="popup-card">
-        <div class="popup-symbol">🔎</div>
-        <span class="popup-eyebrow">CLUE DISCOVERED</span>
+        <div id="popupSymbol" class="popup-symbol">🔎</div>
+
+        <span id="popupEyebrow" class="popup-eyebrow"> CLUE DISCOVERED </span>
+
         <h2 id="popupTitle">Great!</h2>
+
         <p id="popupMessage"></p>
+
+        <!--
+          Only displayed after a successful level completion.
+        -->
+        <div id="popupStats" class="popup-stats hidden">
+          <div id="popupScoreStat" class="popup-stat hidden">
+            <span> SCORE </span>
+
+            <strong id="popupScoreValue"> 100 / 100 </strong>
+          </div>
+
+          <div id="popupTimeStat" class="popup-stat hidden">
+            <span> TIME </span>
+
+            <strong id="popupTimeValue"> 00:00 </strong>
+          </div>
+        </div>
+
         <button id="continueButton" type="button">Continue</button>
       </div>
     </div>
+
+    <!-- =====================================================
+         LOAD ERROR
+    ====================================================== -->
+
     <div id="loadError" class="load-error hidden">
       <div>
         <h2>Level could not be loaded</h2>
+
         <p>Please return to the Escape Room home screen.</p>
-        <a href="../index.html">Escape Room Home</a>
+
+        <a href="../index.html"> Escape Room Home </a>
       </div>
     </div>
+
+    <!-- =====================================================
+         SETTINGS
+    ====================================================== -->
 
     <dialog id="settingsDialog" class="game-settings-dialog">
       <form method="dialog">
@@ -104,18 +196,28 @@
           ×
         </button>
       </form>
+
       <h2>Game Settings</h2>
-      <label
-        ><span
-          ><strong>Sound</strong
-          ><small>Use game and Sanskrit audio when available.</small></span
-        ><input id="soundSetting" type="checkbox" /></label
-      ><label
-        ><span
-          ><strong>Show hints</strong
-          ><small>Show the English hint under the Sanskrit clue.</small></span
-        ><input id="hintSetting" type="checkbox"
-      /></label>
+
+      <label>
+        <span>
+          <strong> Sound </strong>
+
+          <small> Use game and Sanskrit audio when available. </small>
+        </span>
+
+        <input id="soundSetting" type="checkbox" />
+      </label>
+
+      <label>
+        <span>
+          <strong> Show hints </strong>
+
+          <small> Show the English hint under the Sanskrit clue. </small>
+        </span>
+
+        <input id="hintSetting" type="checkbox" />
+      </label>
     </dialog>
 
     <script type="module" src="js/game.js"></script>

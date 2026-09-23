@@ -1,4 +1,6 @@
 import AudioManager from "../features/AudioManager.js";
+import ScoreManager from "../features/ScoreManager.js";
+import TimerManager from "../features/TimerManager.js";
 
 import levels from "../../../levels/manifest.js";
 
@@ -8,8 +10,6 @@ import { createProgressStore } from "../../../shared/js/ProgressStore.js";
 
 /* =========================================================
    IMPLEMENTED LEVELS
-
-   Use the same real playable levels as the homepage.
 ========================================================= */
 
 const implementedLevels = levels
@@ -25,24 +25,47 @@ const levelIds = implementedLevels.map((level) => level.id);
 export default class GameController {
   constructor(model, view) {
     this.model = model;
-
     this.view = view;
 
     /* =====================================================
-       AUDIO
+       FEATURE MANAGERS
     ===================================================== */
 
     this.audioManager = new AudioManager();
 
+    this.timerManager = new TimerManager();
+
+    /* =====================================================
+       LEVEL CONFIGURATION
+    ===================================================== */
+
+    this.scoringConfig = {
+      maxScore: 100,
+      wrongClickPenalty: 5,
+      maxTimePenalty: 20,
+      chancesPerClue: 3,
+
+      ...(this.model.level.scoring || {}),
+    };
+
+    this.timerConfig = {
+      durationSeconds: 0,
+      perfectTimeSeconds: 0,
+
+      ...(this.model.level.timer || {}),
+    };
+
+    this.scoringEnabled = Boolean(this.model.level.settings?.scoring);
+
+    this.timerEnabled = Boolean(
+      this.model.level.settings?.timer &&
+      Number(this.timerConfig.durationSeconds) > 0,
+    );
+
+    this.scoreManager = new ScoreManager(this.scoringConfig);
+
     /* =====================================================
        PROGRESS STORE
-
-       IMPORTANT FIX:
-
-       GameModel does NOT save progress.
-
-       The controller talks directly to the same
-       ProgressStore used by the homepage.
     ===================================================== */
 
     const user = getZatamUser();
@@ -57,23 +80,51 @@ export default class GameController {
 
     this.DEBUG_HOTSPOTS = false;
 
-    // Tracks audio clues that already attempted autoplay.
     this.autoPlayedAudioSteps = new Set();
 
-    // Used when browser blocks autoplay.
     this.pendingAudioInteractionHandler = null;
 
-    // Becomes true after the whole level is completed.
     this.levelFinished = false;
 
-    // Stores the next implemented level.
+    this.levelTimedOut = false;
+
     this.nextLevel = null;
+
+    /* =====================================================
+       CLUE CHANCES
+
+       Each clue starts with the full number of chances.
+
+       Example:
+       3 / 3
+    ===================================================== */
+
+    this.maxChances = Math.max(
+      1,
+      Number(this.scoringConfig.chancesPerClue) || 3,
+    );
+
+    this.chancesLeft = this.maxChances;
+
+    /*
+      The stronger hint becomes active when the player reaches:
+
+      1 / 3
+
+      The correct object is highlighted when the player reaches:
+
+      0 / 3
+    */
+
+    this.strongHintActive = false;
+
+    this.objectHighlightActive = false;
 
     this.start();
   }
 
   /* =========================================================
-     START
+     START LEVEL
   ========================================================= */
 
   start() {
@@ -83,8 +134,18 @@ export default class GameController {
 
     this.view.renderLevel(this.model.level);
 
+    this.view.configurePerformance({
+      scoringEnabled: this.scoringEnabled,
+
+      timerEnabled: this.timerEnabled,
+
+      maxScore: this.scoringConfig.maxScore,
+
+      maxChances: this.maxChances,
+    });
+
     /* =====================================================
-       ROOM CLICKS
+       ROOM INTERACTION
     ===================================================== */
 
     this.view.bindRoomInteraction(
@@ -94,7 +155,7 @@ export default class GameController {
     );
 
     /* =====================================================
-       POPUP CONTINUE / NEXT LEVEL BUTTON
+       POPUP BUTTON
     ===================================================== */
 
     this.view.bindContinue(() => this.handleContinue());
@@ -114,6 +175,8 @@ export default class GameController {
     });
 
     this.render();
+
+    this.startTimer();
   }
 
   /* =========================================================
@@ -127,6 +190,8 @@ export default class GameController {
 
     this.audioManager.stop();
 
+    this.view.clearHelpHighlight();
+
     const step = this.model.getCurrentStep();
 
     this.view.renderClue(
@@ -139,11 +204,279 @@ export default class GameController {
 
     this.view.updateProgress(this.model.currentStepIndex);
 
-    /* =====================================================
-       TRY TO AUTOPLAY AUDIO CLUE
-    ===================================================== */
+    this.view.updateChances(this.chancesLeft, this.maxChances);
+
+    this.updateDisplayedScore();
 
     this.tryAutoPlayAudio(step);
+  }
+
+  /* =========================================================
+     RESET CURRENT CLUE HELP / CHANCES
+
+     Called whenever the player moves to a new clue.
+  ========================================================= */
+
+  resetClueState() {
+    this.chancesLeft = this.maxChances;
+
+    this.strongHintActive = false;
+
+    this.objectHighlightActive = false;
+
+    this.view.clearHelpHighlight();
+  }
+
+  /* =========================================================
+     TIMER
+  ========================================================= */
+
+  startTimer() {
+    if (!this.timerEnabled) {
+      return;
+    }
+
+    const duration = Math.max(
+      1,
+      Math.floor(Number(this.timerConfig.durationSeconds) || 0),
+    );
+
+    this.timerManager.start(
+      duration,
+
+      (remainingSeconds) => {
+        this.view.updateTimer(remainingSeconds);
+
+        this.updateDisplayedScore();
+      },
+
+      () => this.handleTimeExpired(),
+    );
+  }
+
+  pauseTimer() {
+    if (this.timerEnabled) {
+      this.timerManager.pause();
+    }
+  }
+
+  resumeTimer() {
+    if (this.timerEnabled && !this.levelFinished && !this.levelTimedOut) {
+      this.timerManager.resume();
+    }
+  }
+
+  handleTimeExpired() {
+    if (this.levelFinished || this.levelTimedOut) {
+      return;
+    }
+
+    this.levelTimedOut = true;
+
+    this.inputLocked = true;
+
+    this.clearPendingAudioInteraction();
+
+    this.audioManager.stop();
+
+    this.view.clearHelpHighlight();
+
+    this.view.updateTimer(0);
+
+    this.updateDisplayedScore();
+
+    /*
+      A timed-out attempt is NOT a successful completion.
+
+      Nothing is saved through completeLevel(),
+      and the next level remains locked.
+    */
+
+    this.view.showTimeUp();
+  }
+
+  getElapsedSeconds() {
+    if (!this.timerEnabled) {
+      return null;
+    }
+
+    return this.timerManager.getElapsedSeconds();
+  }
+
+  /* =========================================================
+     SCORE
+  ========================================================= */
+
+  getCurrentScore() {
+    if (!this.scoringEnabled) {
+      return 0;
+    }
+
+    const elapsedSeconds = this.getElapsedSeconds() || 0;
+
+    return this.scoreManager.getScore(elapsedSeconds, this.timerConfig);
+  }
+
+  updateDisplayedScore() {
+    if (!this.scoringEnabled) {
+      return;
+    }
+
+    this.view.updateScore(
+      this.getCurrentScore(),
+
+      this.scoringConfig.maxScore,
+    );
+  }
+
+  /* =========================================================
+     REGISTER WRONG ATTEMPT
+
+     Any incorrect click counts:
+
+     - wrong clue object
+     - decorative area
+     - wall
+     - floor
+     - furniture
+     - empty background
+
+     Once chances reach zero, no additional points are lost.
+  ========================================================= */
+
+  registerWrongAttempt() {
+    if (this.chancesLeft <= 0) {
+      return false;
+    }
+
+    this.chancesLeft -= 1;
+
+    if (this.scoringEnabled) {
+      this.scoreManager.registerWrongClick();
+
+      this.updateDisplayedScore();
+    }
+
+    this.view.updateChances(this.chancesLeft, this.maxChances);
+
+    return true;
+  }
+
+  /* =========================================================
+     STRONGER HINT
+
+     This appears when the player reaches:
+
+     1 / 3
+
+     They still have one real attempt left.
+  ========================================================= */
+
+  activateStrongHint(step) {
+    if (this.strongHintActive) {
+      return;
+    }
+
+    this.strongHintActive = true;
+
+    this.view.showHelpHint(step, false);
+  }
+
+  /* =========================================================
+     HIGHLIGHT CORRECT OBJECT
+
+     This happens after the final wrong attempt:
+
+     0 / 3
+
+     The player must still click the highlighted object.
+  ========================================================= */
+
+  activateObjectHighlight(step) {
+    this.strongHintActive = true;
+
+    this.objectHighlightActive = true;
+
+    this.view.showHelpHint(step, true);
+
+    this.view.highlightObject(step.id);
+  }
+
+  /* =========================================================
+     HANDLE ANY WRONG CLICK
+  ========================================================= */
+
+  handleWrongAttempt(message, hotspot = null) {
+    if (this.inputLocked) {
+      return;
+    }
+
+    const step = this.model.getCurrentStep();
+
+    /*
+      If the object is already highlighted, additional wrong
+      clicks do not remove points.
+    */
+
+    if (this.chancesLeft <= 0) {
+      this.view.showHelpHint(step, true);
+
+      return;
+    }
+
+    const counted = this.registerWrongAttempt();
+
+    if (!counted) {
+      return;
+    }
+
+    /*
+      A clickable hotspot can flash when it was selected.
+
+      Empty background clicks have no SVG element to flash.
+    */
+
+    if (hotspot) {
+      this.view.flashWrong(hotspot);
+    }
+
+    /* -------------------------------------------------------
+       LAST CHANCE
+
+       After the second wrong click:
+
+       1 / 3
+
+       Show the stronger hint.
+    ------------------------------------------------------- */
+
+    if (this.chancesLeft === 1) {
+      this.activateStrongHint(step);
+
+      return;
+    }
+
+    /* -------------------------------------------------------
+       NO CHANCES LEFT
+
+       After the third wrong click:
+
+       0 / 3
+
+       Highlight the correct object.
+    ------------------------------------------------------- */
+
+    if (this.chancesLeft === 0) {
+      this.activateObjectHighlight(step);
+
+      return;
+    }
+
+    /*
+      Normal feedback after the first wrong click.
+    */
+
+    this.view.showWrongFeedback(message);
   }
 
   /* =========================================================
@@ -165,8 +498,8 @@ export default class GameController {
       await this.audioManager.play(step.audioFile);
     } catch (error) {
       /*
-        Browsers may block sound before the
-        user interacts with the page.
+        Some browsers block sound until the user interacts
+        with the page.
       */
 
       console.info(
@@ -178,7 +511,7 @@ export default class GameController {
   }
 
   /* =========================================================
-     PLAY AUDIO AFTER FIRST USER INTERACTION
+     PLAY AUDIO AFTER FIRST INTERACTION
   ========================================================= */
 
   playAudioOnFirstInteraction(step) {
@@ -187,10 +520,6 @@ export default class GameController {
     const handler = (event) => {
       const currentStep = this.model.getCurrentStep();
 
-      /*
-        Player may already be on another clue.
-      */
-
       if (currentStep.id !== step.id) {
         this.clearPendingAudioInteraction();
 
@@ -198,8 +527,7 @@ export default class GameController {
       }
 
       /*
-        Speaker button has its own playback
-        handler.
+        The speaker button has its own playback handler.
       */
 
       if (event.target.closest?.("#audioClueButton")) {
@@ -279,14 +607,15 @@ export default class GameController {
 
     /* =====================================================
        WRONG OBJECT
+
+       Even if this object becomes correct later in the level,
+       it is wrong for the CURRENT clue and costs one chance.
     ===================================================== */
 
     if (!this.model.isCorrectObject(objectId)) {
       const message = this.model.getWrongMessage(objectId);
 
-      this.view.showWrongFeedback(message);
-
-      this.view.flashWrong(hotspot);
+      this.handleWrongAttempt(message, hotspot);
 
       return;
     }
@@ -297,9 +626,19 @@ export default class GameController {
 
     this.inputLocked = true;
 
+    /*
+      Pause the timer while the player reads the story popup.
+
+      Reading time should not hurt the level score.
+    */
+
+    this.pauseTimer();
+
     this.clearPendingAudioInteraction();
 
     this.audioManager.stop();
+
+    this.view.clearHelpHighlight();
 
     this.view.showCorrectFeedback();
 
@@ -309,13 +648,9 @@ export default class GameController {
 
     const isLastStep = this.model.isLastStep();
 
-    setTimeout(
+    window.setTimeout(
       () => {
-        this.view.showStoryPopup(
-          step,
-
-          isLastStep,
-        );
+        this.view.showStoryPopup(step, isLastStep);
       },
 
       400,
@@ -324,6 +659,9 @@ export default class GameController {
 
   /* =========================================================
      EMPTY ROOM CLICK
+
+     Empty background clicks now count exactly like any
+     other wrong attempt.
   ========================================================= */
 
   handleEmptyRoomClick() {
@@ -331,7 +669,7 @@ export default class GameController {
       return;
     }
 
-    this.view.showWrongFeedback("Nothing useful there. Look around again.");
+    this.handleWrongAttempt("That does not match the clue. Try again.");
   }
 
   /* =========================================================
@@ -344,29 +682,21 @@ export default class GameController {
     this.audioManager.stop();
 
     /* =====================================================
+       TIME EXPIRED
+    ===================================================== */
+
+    if (this.levelTimedOut) {
+      this.restartLevel();
+
+      return;
+    }
+
+    /* =====================================================
        LEVEL IS ALREADY FINISHED
-
-       This means the button currently says:
-
-       Next Level — ...
-       or
-       Return Home
     ===================================================== */
 
     if (this.levelFinished) {
-      /* ===================================================
-         NEXT LEVEL EXISTS
-      =================================================== */
-
       if (this.nextLevel) {
-        /*
-          We stay on game.html and only change
-          ?level=1 → ?level=2.
-
-          This is safe locally, GitHub Pages,
-          and later inside zat.am.
-        */
-
         const url = new URL(window.location.href);
 
         url.searchParams.set(
@@ -380,25 +710,19 @@ export default class GameController {
         return;
       }
 
-      /* ===================================================
-         NO MORE LEVELS
-      =================================================== */
-
       this.goHome();
 
       return;
     }
 
     /* =====================================================
-       HIDE NORMAL STORY POPUP
+       HIDE STORY POPUP
     ===================================================== */
 
     this.view.hideStoryPopup();
 
     /* =====================================================
-       FINAL CLUE WAS JUST COMPLETED
-
-       NOW SAVE THE LEVEL.
+       FINAL CLUE
     ===================================================== */
 
     if (this.model.isLastStep()) {
@@ -413,7 +737,11 @@ export default class GameController {
 
     this.model.nextStep();
 
+    this.resetClueState();
+
     this.render();
+
+    this.resumeTimer();
   }
 
   /* =========================================================
@@ -425,27 +753,31 @@ export default class GameController {
 
     this.audioManager.stop();
 
+    this.timerManager.stop();
+
     this.inputLocked = true;
 
-    /* =====================================================
-       IMPORTANT
+    const elapsedSeconds = this.getElapsedSeconds();
 
-       Save through ProgressStore.
+    const finalScore = this.scoringEnabled ? this.getCurrentScore() : 0;
 
-       OLD BROKEN CODE WAS:
+    /*
+      Save successful completion through ProgressStore.
 
-       this.model.saveCompletion();
+      ProgressStore keeps the best score and fastest time.
+    */
 
-       GameModel has no such function.
-    ===================================================== */
+    const savedState = this.progressStore.completeLevel(
+      this.model.level.id,
 
-    const savedState = this.progressStore.completeLevel(this.model.level.id);
+      {
+        score: finalScore,
+
+        timeSeconds: elapsedSeconds,
+      },
+    );
 
     console.log(`✅ Level ${this.model.level.id} completed`, savedState);
-
-    /* =====================================================
-       MARK CONTROLLER FINISHED
-    ===================================================== */
 
     this.levelFinished = true;
 
@@ -474,14 +806,46 @@ export default class GameController {
     );
 
     /* =====================================================
-       SHOW PROPER COMPLETION POPUP
+       COMPLETE CLUE AREA
+    ===================================================== */
+
+    this.view.showFinished(this.model.level.completion || {});
+
+    /* =====================================================
+       COMPLETION POPUP
     ===================================================== */
 
     this.view.showLevelComplete(
       this.model.level.completion || {},
 
       this.nextLevel,
+
+      {
+        score: finalScore,
+
+        maxScore: this.scoringConfig.maxScore,
+
+        elapsedSeconds,
+
+        showScore: this.scoringEnabled,
+
+        showTime: this.timerEnabled,
+      },
     );
+  }
+
+  /* =========================================================
+     RESTART LEVEL
+  ========================================================= */
+
+  restartLevel() {
+    this.timerManager.stop();
+
+    this.clearPendingAudioInteraction();
+
+    this.audioManager.stop();
+
+    window.location.reload();
   }
 
   /* =========================================================
@@ -489,22 +853,11 @@ export default class GameController {
   ========================================================= */
 
   goHome() {
+    this.timerManager.stop();
+
     this.clearPendingAudioInteraction();
 
     this.audioManager.stop();
-
-    /*
-      Current page:
-
-      /game/game.html
-
-      ../index.html gives:
-
-      /index.html
-
-      Relative routing is better for future
-      zat.am integration.
-    */
 
     window.location.href = new URL(
       "../index.html",

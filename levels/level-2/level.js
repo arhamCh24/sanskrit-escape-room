@@ -16,42 +16,54 @@ const level2 = {
 
   /* ---------------------------------------------------------
      LEVEL FEATURES
-
-     Level 2 contains audio clues, so audio is enabled.
-
-     Other planned features stay disabled until the shared
-     engine supports them.
   --------------------------------------------------------- */
 
   settings: {
-    timer: false,
+    timer: true,
     questions: false,
     audio: true,
-    scoring: false,
+    scoring: true,
     randomizeObjects: false,
   },
 
   /* ---------------------------------------------------------
-     ROOM / BACKGROUND
+     SCORING
+  --------------------------------------------------------- */
 
-     width and height must match the background artwork.
+  scoring: {
+    maxScore: 100,
+    wrongClickPenalty: 5,
+    maxTimePenalty: 20,
+    chancesPerClue: 3,
+  },
+
+  /* ---------------------------------------------------------
+     TIMER
+  --------------------------------------------------------- */
+
+  timer: {
+    durationSeconds: 180,
+    perfectTimeSeconds: 45,
+  },
+
+  /* ---------------------------------------------------------
+     ROOM / BACKGROUND
   --------------------------------------------------------- */
 
   room: {
     width: 1672,
+
     height: 941,
 
     backgroundUrl: new URL(
       "../../assets/images/levels/level-2/background.png",
+
       import.meta.url,
     ).href,
   },
 
   /* ---------------------------------------------------------
      LEVEL COMPLETION
-
-     The shared controller decides whether to show
-     "Next Level" or "Back to Home".
   --------------------------------------------------------- */
 
   completion: {
@@ -65,28 +77,6 @@ const level2 = {
 
   /* ---------------------------------------------------------
      CLUE SEQUENCE
-
-     IMPORTANT:
-     The order of objects in this array IS the gameplay order.
-
-     Current sequence:
-
-     Bag
-       ↓
-     Ticket
-       ↓
-     Clock
-       ↓
-     Bench
-       ↓
-     Departure Board
-       ↓
-     Platform Gate
-       ↓
-     Train
-
-     To change the sequence, move the WHOLE clue object
-     higher or lower in the steps array.
   --------------------------------------------------------- */
 
   steps: [
@@ -97,16 +87,11 @@ const level2 = {
     {
       id: "bag",
 
-      /*
-        Keep the Sanskrit word in the data even though this
-        clue uses audio.
-
-        GameView hides the word while the audio clue is active.
-      */
-
       sanskrit: "स्यूतम्",
 
       hint: "Listen carefully and find the object you hear.",
+
+      helpHint: "Look at the brown backpack resting on the waiting bench.",
 
       foundLabel: "Bag",
 
@@ -119,6 +104,7 @@ const level2 = {
 
       audioFile: new URL(
         "../../assets/audio/levels/level-2/bag.mp3",
+
         import.meta.url,
       ).href,
     },
@@ -133,6 +119,8 @@ const level2 = {
       sanskrit: "चीटिकाम्",
 
       hint: "Your journey cannot begin without this important travel item.",
+
+      helpHint: "Look on the bench beside the travel bag for the small ticket.",
 
       foundLabel: "Ticket",
 
@@ -155,6 +143,8 @@ const level2 = {
 
       hint: "Your ticket is ready. Now find something that helps you know the time.",
 
+      helpHint: "Look high on the wall near the center-left of the station.",
+
       foundLabel: "Clock",
 
       title: "You found the clock!",
@@ -175,6 +165,8 @@ const level2 = {
       sanskrit: "आसन्दः",
 
       hint: "Find the place where travellers can sit while they wait.",
+
+      helpHint: "Look at the long wooden waiting bench on the left side.",
 
       foundLabel: "Waiting Bench",
 
@@ -197,6 +189,9 @@ const level2 = {
 
       hint: "Find the place where travel information is displayed.",
 
+      helpHint:
+        "Look at the large information board hanging above the waiting area.",
+
       foundLabel: "Departure Board",
 
       title: "You found the departure board!",
@@ -218,6 +213,9 @@ const level2 = {
 
       hint: "Go forward. Find the entrance that leads toward the platform.",
 
+      helpHint:
+        "Look for the turnstile entrance that leads toward the train platform.",
+
       foundLabel: "Platform Gate",
 
       title: "The way is open!",
@@ -235,16 +233,11 @@ const level2 = {
     {
       id: "train",
 
-      /*
-        Stored here for consistency.
-
-        GameView hides the Sanskrit word while the audio clue
-        is active.
-      */
-
       sanskrit: "यानम्",
 
       hint: "Listen carefully and find the object you hear.",
+
+      helpHint: "Look through the platform entrance for the visible train.",
 
       foundLabel: "Train",
 
@@ -257,6 +250,7 @@ const level2 = {
 
       audioFile: new URL(
         "../../assets/audio/levels/level-2/train.mp3",
+
         import.meta.url,
       ).href,
     },
@@ -264,45 +258,62 @@ const level2 = {
 
   /* ---------------------------------------------------------
      CLICKABLE HOTSPOTS
-
-     These coordinates control WHERE the player can click.
-
-     IMPORTANT:
-
-     Changing these coordinates changes the CLICKABLE REGION.
-
-     It does NOT visually move the object if the object is
-     already painted into background.png.
-
-     Polygon:
-
-       points: "x,y x,y x,y ..."
-
-       smaller X = left
-       larger X  = right
-
-       smaller Y = up
-       larger Y  = down
-
-     Circle:
-
-       cx = horizontal position
-       cy = vertical position
-       r  = radius
-
-     Multiple hotspot shapes can use the same "object" name.
-
-     For example several polygons can all use:
-
-       object: "bench"
-
-     and they will all count as the same clue object.
   --------------------------------------------------------- */
 
   hotspots: [
     /* =====================================================
-       BAG / BACKPACK
-    ===================================================== */
+     BENCH
+  ===================================================== */
+
+    // Main bench body / backrest / seat.
+    {
+      type: "polygon",
+
+      object: "bench",
+
+      points:
+        "58,524 492,524 526,548 531,612 523,654 488,683 565,700 675,721 697,755 690,804 655,820 592,831 514,821 428,817 365,862 316,905 225,919 98,919 70,882 61,821 60,753 60,660",
+    },
+
+    /*
+    Extra lower/front coverage.
+  */
+    {
+      type: "polygon",
+
+      object: "bench",
+
+      points:
+        "68,690 185,669 280,648 377,655 459,682 574,713 675,730 698,764 683,811 590,834 430,824 316,910 96,921 71,870",
+    },
+
+    /*
+    Extra center section.
+  */
+    {
+      type: "polygon",
+
+      object: "bench",
+
+      points:
+        "257,528 490,528 525,550 528,614 518,655 484,686 441,704 372,718 296,729 254,701",
+    },
+
+    /*
+    Right side of the bench.
+  */
+    {
+      type: "polygon",
+
+      object: "bench",
+
+      points:
+        "433,661 523,651 573,692 674,720 701,755 691,805 655,822 589,834 520,819 451,796",
+    },
+
+    /* =====================================================
+     BAG
+  ===================================================== */
 
     {
       type: "polygon",
@@ -314,8 +325,8 @@ const level2 = {
     },
 
     /* =====================================================
-       TICKET
-    ===================================================== */
+     TICKET
+  ===================================================== */
 
     {
       type: "polygon",
@@ -326,12 +337,8 @@ const level2 = {
     },
 
     /* =====================================================
-       CLOCK
-
-       cx = left/right
-       cy = up/down
-       r  = clickable size
-    ===================================================== */
+     CLOCK
+  ===================================================== */
 
     {
       type: "circle",
@@ -346,63 +353,8 @@ const level2 = {
     },
 
     /* =====================================================
-       BENCH
-
-       The bench is large, so several polygons use the same:
-
-       object: "bench"
-
-       All of them count as the same gameplay object.
-    ===================================================== */
-
-    // Upper-left backrest.
-    {
-      type: "polygon",
-
-      object: "bench",
-
-      points: "62,537 281,528 291,556 288,650 255,681 83,701 62,660",
-    },
-
-    // Left-middle seat area.
-    {
-      type: "polygon",
-
-      object: "bench",
-
-      points: "69,693 274,650 278,717 254,756 87,786 64,752",
-    },
-
-    // Lower/front wooden section.
-    {
-      type: "polygon",
-
-      object: "bench",
-
-      points: "155,778 450,742 424,812 314,899 98,910",
-    },
-
-    // Visible bench area behind/right of backpack.
-    {
-      type: "polygon",
-
-      object: "bench",
-
-      points: "442,532 489,530 511,549 526,601 521,653 489,680 452,667",
-    },
-
-    // Far-right section of the bench.
-    {
-      type: "polygon",
-
-      object: "bench",
-
-      points: "575,740 671,727 687,758 679,799 591,820 575,789",
-    },
-
-    /* =====================================================
-       DEPARTURE BOARD
-    ===================================================== */
+     DEPARTURE BOARD
+  ===================================================== */
 
     {
       type: "polygon",
@@ -413,13 +365,9 @@ const level2 = {
     },
 
     /* =====================================================
-       PLATFORM GATE
+     PLATFORM GATE
+  ===================================================== */
 
-       Several smaller regions make the entrance easier to
-       click without creating one oversized hotspot.
-    ===================================================== */
-
-    // Left turnstile.
     {
       type: "polygon",
 
@@ -428,7 +376,6 @@ const level2 = {
       points: "962,476 1065,474 1091,490 1093,620 1050,655 967,645 950,608",
     },
 
-    // Right turnstile.
     {
       type: "polygon",
 
@@ -437,7 +384,6 @@ const level2 = {
       points: "1214,474 1308,473 1322,491 1322,641 1280,661 1217,650",
     },
 
-    // Horizontal entrance rail.
     {
       type: "polygon",
 
@@ -447,13 +393,9 @@ const level2 = {
     },
 
     /* =====================================================
-       TRAIN
+     TRAIN
+  ===================================================== */
 
-       The train is split into several regions instead of
-       creating one huge clickable rectangle.
-    ===================================================== */
-
-    // Left carriage.
     {
       type: "polygon",
 
@@ -462,7 +404,6 @@ const level2 = {
       points: "829,376 875,373 885,486 834,489",
     },
 
-    // Middle carriage.
     {
       type: "polygon",
 
@@ -471,7 +412,6 @@ const level2 = {
       points: "1071,351 1238,350 1238,483 1071,484",
     },
 
-    // Front / locomotive.
     {
       type: "polygon",
 
